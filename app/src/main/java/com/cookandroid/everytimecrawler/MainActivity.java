@@ -14,6 +14,7 @@ public class MainActivity extends AppCompatActivity {
     EditText login_id, login_password;
     String sId, sPw;
     Intent intent;
+    Intent intent1;
     ImageButton loginbutton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         loginbutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                intent1 = new Intent(getApplicationContext(), SubActivity.class);
+                startActivity(intent1);
                 startService(intent);
                 android.util.Log.i("크롤링 인텐트로 넘어감", "startService()");
             }

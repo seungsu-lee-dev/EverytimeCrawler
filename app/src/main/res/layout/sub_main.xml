@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:orientation="vertical"
     android:background="@color/colorNam"
 
@@ -13,15 +12,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20dp"
+
         android:background="@android:color/transparent"
         android:clickable="true"
+        android:layout_weight="1"
         android:src="@drawable/newnew" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
+
         android:layout_gravity="center"
         >
         <EditText
@@ -31,7 +31,7 @@
             android:id="@+id/editText"
             android:focusable="true"
             android:focusableInTouchMode="true"
-
+            android:singleLine="true"
             android:hint="입력해주세요"
             android:gravity="center"
             android:textColorHint="@color/colorGreen"
@@ -45,7 +45,7 @@
         android:layout_width="320dp"
         android:layout_height="170dp"
         android:layout_gravity="center"
-        android:layout_marginTop="7dp"
+        android:layout_weight="1"
 
         android:background="@drawable/xml_border"
         android:gravity="center">
@@ -56,8 +56,8 @@
             android:layout_height="170dp"
 
             android:divider="@color/colorWhite"
-            android:dividerHeight="1dp"
-            />
+            android:layout_weight="1"
+            android:dividerHeight="1dp" />
     </LinearLayout>
 
 
@@ -68,7 +68,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp">
+        android:layout_weight="1"
+        >
         <ImageButton
             android:id="@+id/btnAdd"
             android:layout_width="wrap_content"
@@ -78,7 +79,9 @@
             android:clickable="true"
             android:onClick="mOnClick"
             android:src="@drawable/add"
-            android:layout_marginRight="10dp"/>
+            android:layout_weight="1"
+            android:layout_marginRight="25dp"
+            />
 
         <ImageButton
             android:id="@+id/btnDel"
@@ -88,17 +91,18 @@
             android:background="@android:color/transparent"
             android:clickable="true"
             android:onClick="mOnClick"
+            android:layout_weight="1"
             android:src="@drawable/alldelete1" />
 
     </LinearLayout>
-//====================================================================
+    //====================================================================
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
 
+        android:layout_weight="1"
         >
         <ImageButton
             android:id="@+id/savelist11"
@@ -110,7 +114,9 @@
             android:clickable="true"
             android:onClick="getList"
             android:src="@drawable/savelist1"
-            android:layout_marginRight="25dp"/>
+            android:layout_weight="1"
+            android:layout_marginRight="25dp"
+            />
 
         <ImageButton
             android:id="@+id/setting11"
@@ -121,6 +127,7 @@
             android:background="@android:color/transparent"
             android:clickable="true"
             android:onClick="setting11"
+            android:layout_weight="1"
             android:src="@drawable/setting1" />
 
     </LinearLayout>
@@ -131,7 +138,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
 
-
+        android:layout_weight="1"
         >
         <ImageButton
             android:id="@+id/loadlist1"
@@ -143,6 +150,7 @@
             android:clickable="true"
             android:onClick="getList"
             android:src="@drawable/loadlist"
+            android:layout_weight="1"
             android:layout_marginRight="25dp"/>
 
         <ImageButton
@@ -153,10 +161,22 @@
 
             android:background="@android:color/transparent"
             android:clickable="true"
+            android:layout_weight="1"
 
             android:src="@drawable/run" />
 
     </LinearLayout>
+    <TextView
+        android:id="@+id/textViewcopyright"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
 
+        android:gravity="top"
+        android:text="copyright by DOT"
+        android:textColor="#03A9F4"
+        android:textSize="16dp"
+        android:layout_weight="1"
+        />
 
 </LinearLayout>
