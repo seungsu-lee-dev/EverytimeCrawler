@@ -35,7 +35,7 @@ public class SubActivity extends AppCompatActivity {
 
 
         Adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_single_choice, Items);
+                R.layout.simple_list_item, Items);
         listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(Adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
