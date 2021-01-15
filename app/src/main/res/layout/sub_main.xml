@@ -8,23 +8,16 @@
 
     >
 
-    <ImageButton
-        android:id="@+id/newenw1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
 
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:layout_weight="1"
-        android:src="@drawable/newnew" />
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:layout_weight="1"
         android:layout_gravity="center"
+        android:gravity="center"
         >
+    <!-- gravity는 세로로 중간 / layout_gravity는 가로로 중간-->
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,11 +25,10 @@
             android:id="@+id/editText"
             android:focusable="true"
             android:focusableInTouchMode="true"
-
-            android:hint="입력해주세요"
+            android:background="@drawable/newsearch1"
+            android:hint="키워드를 입력해주세요"
             android:gravity="center"
             android:textColorHint="@color/colorGreen"
-            android:backgroundTint="@color/colorGreen"
             android:textColor="@color/colorWhite"
             />
 
@@ -49,15 +41,16 @@
         android:layout_weight="1"
 
         android:background="@drawable/xml_border"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="290dp"
             android:layout_height="170dp"
 
-            android:divider="@color/colorWhite"
             android:layout_weight="1"
+            android:divider="@color/colorWhite"
             android:dividerHeight="1dp" />
     </LinearLayout>
 
