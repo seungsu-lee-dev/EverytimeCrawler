@@ -67,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
             sPw = login_password.getText().toString();
         }
 
-        public void run() {
+        public void run(){
             // 로그인 페이지 접속
-            Connection.Response loginPageResponse = null;
+
             try {
-                loginPageResponse = Jsoup.connect("https://everytime.kr/login")
+                Connection.Response loginPageResponse = Jsoup.connect("https://everytime.kr/login")
                         .timeout(3000)
                         .header("Origin", "https://everytime.kr/")
                         .header("Referer", "https://everytime.kr")
@@ -81,41 +81,24 @@ public class MainActivity extends AppCompatActivity {
                         .header("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")
                         .method(Connection.Method.GET)
                         .execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-                android.util.Log.i("로그인 페이지 접속 오류", "Information message");
-            }
 
-            // 로그인 페이지에서 얻은 쿠키
-            Map<String, String> loginTryCookie = loginPageResponse.cookies();
-//
-//                // 로그인 페이지에서 로그인에 함께 전송하는 토큰 얻어내기
-//                Document loginPageDocument = null;
-//                try {
-//                    loginPageDocument = loginPageResponse.parse();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                String ofp = loginPageDocument.select("input.ofp").val();
-//                String nfp = loginPageDocument.select("input.nfp").val();
+                // 로그인 페이지에서 얻은 쿠키
+                Map<String, String> loginTryCookie = loginPageResponse.cookies();
 
-            // Window, Chrome의 User Agent.
-            String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
+                // Window, Chrome의 User Agent.
+                String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
 
-            // 전송할 폼 데이터
-            Map<String, String> data = new HashMap<>();
-            data.put("loginId", sId);
-            data.put("password", sPw);
+                // 전송할 폼 데이터
+                Map<String, String> data = new HashMap<>();
+                data.put("loginId", sId);
+                data.put("password", sPw);
 //                data.put("rememberLoginId", "1");
-            data.put("redirectUrl", "/");
+                data.put("redirectUrl", "/");
 //                data.put("ofp", ofp); // 로그인 페이지에서 얻은 토큰들
 //                data.put("nfp", nfp);
 
-            // 로그인(POST)
-            Connection.Response response = null;
-            try {
-                response = Jsoup.connect("https://everytime.kr/user/login")
+                // 로그인(POST)
+                Connection.Response response = Jsoup.connect("https://everytime.kr/user/login")
                         .userAgent(userAgent)
                         .timeout(3000)
                         .header("Origin", "https://everytime.kr/")
@@ -128,14 +111,38 @@ public class MainActivity extends AppCompatActivity {
                         .data(data)
                         .method(Connection.Method.POST)
                         .execute();
+
+                // 로그인 성공 후 얻은 쿠키.
+                // 쿠키 중 TSESSION 이라는 값을 확인할 수 있다.
+                Map<String, String> loginCookie = response.cookies();
+
+                Document doc = Jsoup.connect("https://everytime.kr/389368")
+                        .userAgent(userAgent)
+                        .timeout(3000000)
+                        .cookies(loginCookie)
+                        .get();
+
+                String test_text = doc.text();
+                System.out.println(test_text);
+
             } catch (IOException e) {
-//                e.printStackTrace();
-                android.util.Log.i("로그인 오류", "Information message");
+                e.printStackTrace();
             }
 
-            // 로그인 성공 후 얻은 쿠키.
-            // 쿠키 중 TSESSION 이라는 값을 확인할 수 있다.
-            Map<String, String> loginCookie = response.cookies();
+
+//
+//                // 로그인 페이지에서 로그인에 함께 전송하는 토큰 얻어내기
+//                Document loginPageDocument = null;
+//                try {
+//                    loginPageDocument = loginPageResponse.parse();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                String ofp = loginPageDocument.select("input.ofp").val();
+//                String nfp = loginPageDocument.select("input.nfp").val();
+
+
 
 //        // 티스토리 관리자 페이지
 //        Document adminPageDocument = Jsoup.connect("http://partnerjun.tistory.com/admin")
@@ -180,18 +187,6 @@ public class MainActivity extends AppCompatActivity {
 
 //            String s = doc.select("a.article h2.medium").text();
 //            System.out.println(s);
-
-            Document doc = null;
-            try {
-                doc = Jsoup.connect("https://everytime.kr/389368")
-                        .cookies(loginCookie)
-                        .timeout(3000000).get();
-            } catch (IOException e) {
-//                e.printStackTrace();
-                android.util.Log.i("로그인 테스트용 장터게시판 크롤링 오류", "Information message");
-            }
-            String test_text = doc.text();
-            System.out.println(test_text);
         }
     }
 }
