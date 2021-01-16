@@ -90,10 +90,10 @@ public class MainActivity extends AppCompatActivity {
 
                 // 전송할 폼 데이터
                 Map<String, String> data = new HashMap<>();
-                data.put("loginId", sId);
+                data.put("userid", sId);
                 data.put("password", sPw);
 //                data.put("rememberLoginId", "1");
-                data.put("redirectUrl", "/");
+                data.put("redirect", "/");
 //                data.put("ofp", ofp); // 로그인 페이지에서 얻은 토큰들
 //                data.put("nfp", nfp);
 
@@ -124,6 +124,30 @@ public class MainActivity extends AppCompatActivity {
 
                 String test_text = doc.text();
                 System.out.println(test_text);
+
+//                Connection.Response initial = Jsoup.connect("https://everytime.kr/login")
+//                        .method(Connection.Method.GET)
+//                        .execute();
+//
+//                Map<String, String> data = new HashMap<>();
+//                data.put("userid", sId);
+//                data.put("password", sPw);
+//                data.put("redirect", "/");
+//
+//                Connection.Response login = Jsoup.connect("https://everytime.kr/user/login")
+//                        .cookies(initial.cookies())
+//                        .data()
+//                        .method(Connection.Method.POST)
+//                        .timeout(5000)
+//                        .execute();
+//
+//                Document doc = Jsoup.connect("https://everytime.kr/389368")
+//                        .cookies(login.cookies())
+//                        .timeout(3000000)
+//                        .get();
+//
+//                String test_text = doc.text();
+//                System.out.println(test_text);
 
             } catch (IOException e) {
                 e.printStackTrace();
