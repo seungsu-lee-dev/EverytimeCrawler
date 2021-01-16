@@ -72,8 +72,7 @@
             android:layout_marginTop="13dp"
             android:background="@android:color/transparent"
             android:src="@drawable/round_login2"
-            android:clickable="true"
-            android:onClick="loginbutton"/>
+            android:clickable="true"/>
 
     </LinearLayout>
 
