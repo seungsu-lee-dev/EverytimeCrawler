@@ -17,8 +17,10 @@
             </intent-filter>
         </activity>
         <activity android:name="SubActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan"
+            >
         </activity>
+        <activity android:name=".LoadList"></activity>
     </application>
 
 
