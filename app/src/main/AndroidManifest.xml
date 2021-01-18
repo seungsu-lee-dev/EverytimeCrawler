@@ -18,5 +18,8 @@
             </intent-filter>
         </activity>
         <service android:name=".CrawlingService"/>
+        <activity android:name=".SubActivity"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
     </application>
 </manifest>

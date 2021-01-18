@@ -23,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
 
     EditText login_id, login_password;
     String sId, sPw;
-    Intent intent;
+//    Intent intent;
+    Intent intent1;
     ImageButton loginbutton;
     LoginThread thread;
 
@@ -37,14 +38,15 @@ public class MainActivity extends AppCompatActivity {
         login_id = (EditText) findViewById(R.id.login_id);
         login_password = (EditText) findViewById(R.id.login_password);
 
-        intent = new Intent(this, CrawlingService.class);
+//        intent = new Intent(this, CrawlingService.class);
         loginbutton = (ImageButton) findViewById(R.id.loginbutton);
 
         loginbutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //startService(intent);
                 //android.util.Log.i("크롤링 인텐트로 넘어감", "startService()");
-
+                intent1 = new Intent(getApplicationContext(), SubActivity.class);
+                startActivity(intent1);
                 thread = new LoginThread();
                 thread.start();
                 try {
