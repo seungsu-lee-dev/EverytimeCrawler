@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:background="@color/colorNam"
+    android:background="@drawable/back"
 
     >
 
@@ -30,6 +30,8 @@
             android:gravity="center"
             android:textColorHint="@color/colorGreen"
             android:textColor="@color/colorWhite"
+
+
             />
 
     </LinearLayout>
@@ -49,11 +51,15 @@
             android:layout_width="290dp"
             android:layout_height="170dp"
 
+            android:choiceMode="singleChoice"
             android:layout_weight="1"
             android:divider="@color/colorWhite"
-            android:dividerHeight="1dp" />
-    </LinearLayout>
+            android:dividerHeight="1dp">
 
+        </ListView>
+
+    </LinearLayout>
+    <!-- choicemode 설정해야 선택기능 사용-->
 
 
 
@@ -75,6 +81,7 @@
             android:src="@drawable/add"
             android:layout_weight="1"
             android:layout_marginRight="25dp"
+
           />
 
         <ImageButton
@@ -106,7 +113,7 @@
 
             android:background="@android:color/transparent"
             android:clickable="true"
-            android:onClick="getList"
+            android:onClick="OnClickHandler"
             android:src="@drawable/savelist1"
             android:layout_weight="1"
             android:layout_marginRight="25dp"
