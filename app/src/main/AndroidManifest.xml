@@ -21,5 +21,11 @@
         <activity android:name=".SubActivity"
             android:windowSoftInputMode="adjustPan">
         </activity>
+        <activity android:name=".LoadList"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity android:name=".loading"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
     </application>
 </manifest>

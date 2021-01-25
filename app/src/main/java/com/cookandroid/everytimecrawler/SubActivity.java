@@ -4,6 +4,7 @@ package com.cookandroid.everytimecrawler;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -16,19 +17,21 @@ import com.cookandroid.everytimecrawler.Room.User;
 import java.util.ArrayList;
 
 public class SubActivity extends AppCompatActivity {
-
     AppDatabase db;
-    ImageButton setting11;
     ArrayList<String> Items;
     ArrayAdapter<String> Adapter;
     ListView listView;
-    ImageButton btnAdd, btnDel, btnSave, btnLoad;
+    ImageButton btnAdd, btnDel, btnSave, btnSetting, btnLoad, btnRun;
     EditText editText;
     Intent intent;
+    Intent intent1;
+    Intent intent2;
     String kiword;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.sub_main);
 
         intent = getIntent();
@@ -39,25 +42,11 @@ public class SubActivity extends AppCompatActivity {
         Adapter = new ArrayAdapter<String>(this,
                 R.layout.simple_list_item, Items);
 
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(Adapter);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        ini();
 
-        editText = (EditText) findViewById(R.id.editText);
-        btnAdd = (ImageButton) findViewById(R.id.btnAdd);
-        btnDel = (ImageButton) findViewById(R.id.btnDel);
-        btnSave = (ImageButton) findViewById(R.id.savelist11);
-        btnLoad = (ImageButton) findViewById(R.id.loadlist1);
+        btnSetting = (ImageButton) findViewById(R.id.btnSetting);
 
-        btnAdd.setOnClickListener(listener);
-        btnDel.setOnClickListener(listener);
-        btnSave.setOnClickListener(listener);
-        btnLoad.setOnClickListener(listener);
-
-
-        setting11 = (ImageButton) findViewById(R.id.setting11);
-
-       /* setting11.setOnClickListener(new View.OnClickListener() {
+       /* btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ArrayList<String> gs = new ArrayList<>();
@@ -70,7 +59,6 @@ public class SubActivity extends AppCompatActivity {
             }
         });*/
 
-
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,7 +69,6 @@ public class SubActivity extends AppCompatActivity {
     }
 
     private void make_title() {
-
         EditText et = new EditText(getApplicationContext());
         AlertDialog.Builder builder = new AlertDialog.Builder(SubActivity.this);
         builder.setTitle("제목을 입력하세요");
@@ -111,8 +98,26 @@ public class SubActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private View.OnClickListener listener = new View.OnClickListener() {
+    private void ini() {
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(Adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
+        editText = (EditText) findViewById(R.id.editText);
+        btnAdd = (ImageButton) findViewById(R.id.btnAdd);
+        btnDel = (ImageButton) findViewById(R.id.btnDel);
+        btnSave = (ImageButton) findViewById(R.id.btnSave);
+        btnLoad = (ImageButton) findViewById(R.id.btnLoad);
+        btnRun = (ImageButton) findViewById(R.id.btnRun);
+
+        btnAdd.setOnClickListener(listener);
+        btnDel.setOnClickListener(listener);
+        btnSave.setOnClickListener(listener);
+        btnLoad.setOnClickListener(listener);
+        btnRun.setOnClickListener(listener);
+    }
+
+    private View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -124,6 +129,7 @@ public class SubActivity extends AppCompatActivity {
                         Adapter.notifyDataSetChanged();
                     }
                     break;
+
                 case R.id.btnDel:
                     int pos;
                     pos = listView.getCheckedItemPosition();
@@ -134,15 +140,21 @@ public class SubActivity extends AppCompatActivity {
                     }
                     break;
 
-                case R.id.loadlist1:
-                    Intent intent = new Intent(getApplicationContext(),LoadList.class);
+                case R.id.btnLoad:
+                    intent = new Intent(getApplicationContext(),LoadList.class);
                     startActivity(intent);
                     finish();
+                    break;
+
+                case R.id.btnRun:
+                    intent1 = new Intent(getApplicationContext(), CrawlingService.class);
+                    startService(intent1);
+//                    android.util.Log.i("크롤링 인텐트로 넘어감", "startService()");
+                    android.util.Log.i("크롤링 인텐트로 넘어감", "Information message");
+                    intent2 = new Intent(getApplicationContext(), loading.class);
+                    startActivity(intent2);
+                    break;
             }
-
         }
-
-
-
     };
 }

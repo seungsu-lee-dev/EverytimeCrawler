@@ -18,9 +18,7 @@ import java.util.ArrayList;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
 
-
     private ArrayList<User> userData = new ArrayList<>();
-
 
     @NonNull
     @Override
@@ -48,7 +46,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
         private TextView key;
         private TextView title;
         private TextView description;
-
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
