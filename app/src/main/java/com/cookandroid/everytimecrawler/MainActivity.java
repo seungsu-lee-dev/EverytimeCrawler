@@ -2,10 +2,12 @@ package com.cookandroid.everytimecrawler;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -114,9 +116,27 @@ public class MainActivity extends AppCompatActivity {
                 String test_text = doc.text();
                 System.out.println(test_text);
 
+                if (test_text.contains("내 정보")) {
+                    showToast("로그인되었습니다");
+                }
+                else {
+                    showToast("로그인 정보가 올바르지 않습니다");
+                }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    final Handler mHandler = new Handler();
+    void showToast(final CharSequence text) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
