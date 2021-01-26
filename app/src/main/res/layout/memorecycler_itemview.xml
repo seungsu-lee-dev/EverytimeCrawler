@@ -48,7 +48,7 @@
     </LinearLayout>
 
     <ImageButton
-        android:id="@+id/imageButton"
+        android:id="@+id/mib"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:clickable="true"

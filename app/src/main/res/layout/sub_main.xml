@@ -99,7 +99,7 @@
         android:layout_weight="1"
         >
         <ImageButton
-            android:id="@+id/savelist11"
+            android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -113,7 +113,7 @@
             />
 
         <ImageButton
-            android:id="@+id/setting11"
+            android:id="@+id/btnSetting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -135,7 +135,7 @@
         android:layout_weight="1"
         >
         <ImageButton
-            android:id="@+id/loadlist1"
+            android:id="@+id/btnLoad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -148,7 +148,7 @@
             android:layout_marginRight="25dp"/>
 
         <ImageButton
-            android:id="@+id/run1"
+            android:id="@+id/btnRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

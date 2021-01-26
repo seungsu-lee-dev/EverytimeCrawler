@@ -9,7 +9,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cookandroid.everytimecrawler.Recycle.RecyclerAdapter;
 import com.cookandroid.everytimecrawler.Room.AppDatabase;
+import com.cookandroid.everytimecrawler.Room.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 public class LoadList extends AppCompatActivity {
     private FloatingActionButton add;
@@ -17,6 +20,7 @@ public class LoadList extends AppCompatActivity {
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
     private RecyclerAdapter adapter;
+    private List<User> users;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,10 +43,12 @@ public class LoadList extends AppCompatActivity {
         linearLayoutManager = new LinearLayoutManager(this);
         adapter = new RecyclerAdapter();
 
-        int size = AppDatabase.getInstance(this).userDao().getAll().size();
+        //int size = AppDatabase.getInstance(this).userDao().getAll().size();
+        users = AppDatabase.getInstance(this).userDao().getAll();
+        int size = users.size();
         for(int i = 0; i < size; i++) {
-            adapter.addItems(AppDatabase.getInstance(this).userDao().getAll().get(i));
-            System.out.println("###" + AppDatabase.getInstance(this).userDao().getAll().get(i));
+            //adapter.addItems(AppDatabase.getInstance(this).userDao().getAll().get(i));
+            adapter.addItems(users.get(i));
         }
     }
 
