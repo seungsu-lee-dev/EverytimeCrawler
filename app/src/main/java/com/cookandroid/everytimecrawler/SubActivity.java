@@ -9,12 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.cookandroid.everytimecrawler.Room.AppDatabase;
 import com.cookandroid.everytimecrawler.Room.User;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SubActivity extends AppCompatActivity {
     AppDatabase db;
@@ -26,7 +28,8 @@ public class SubActivity extends AppCompatActivity {
     Intent intent;
     Intent intent1;
     Intent intent2;
-    String kiword;
+    private String detail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,30 +37,31 @@ public class SubActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.sub_main);
 
-        intent = getIntent();
-        kiword = intent.getStringExtra("data");
-
         db = AppDatabase.getInstance(this);
         Items = new ArrayList<String>();
         Adapter = new ArrayAdapter<String>(this,
                 R.layout.simple_list_item, Items);
+        detail = getIntent().getStringExtra("data");
 
         ini();
 
+        //불러오기
+        if(detail != null ) {
+            detail = detail.replaceAll("\\[","").replaceAll("\\]","");
+            String [] str = detail.split("\\s*,\\s*");
+            for(int i = 0; i < str.length; i++) {
+                Items.add(str[i]);
+            }
+        }
+
         btnSetting = (ImageButton) findViewById(R.id.btnSetting);
 
-       /* btnSetting.setOnClickListener(new View.OnClickListener() {
+        btnSetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<String> gs = new ArrayList<>();
-                String gs2 = getIntent().getStringExtra("data");
-                String x = (String) gs2;
-                gs.add(x);
-                for(int i = 0; i < gs.size(); i++) {
-                    Items.add(gs.get(i));
-                }
+
             }
-        });*/
+        });
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +69,6 @@ public class SubActivity extends AppCompatActivity {
                 make_title();
             }
         });
-
     }
 
     private void make_title() {
@@ -82,10 +85,9 @@ public class SubActivity extends AppCompatActivity {
                 String s1 = (String) listView.getItemAtPosition(i);
                 itemList.add(s1);
             }
-            String s1 = (String) itemList.toString();
+            String s1 = String.valueOf(itemList);
             User memo = new User(s,s1);
             db.userDao().insert(memo);
-
             Toast.makeText(getApplicationContext(), "저장되었습니다", Toast.LENGTH_SHORT).show();
             dialog.dismiss();
 
