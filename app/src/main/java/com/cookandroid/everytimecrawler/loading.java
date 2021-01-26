@@ -45,6 +45,7 @@ public class loading extends MainActivity {
                 case R.id.loadingImage:
                     if(!isPaused) {
                         loadingImage.clearAnimation();
+//                        stopService(CrawlingService);
                     }
                     else {
                         loadingImage.startAnimation(anim);
@@ -53,8 +54,7 @@ public class loading extends MainActivity {
                     break;
 
                 case R.id.preButton:
-                    Intent intent = new Intent(getApplicationContext(), SubActivity.class);
-                    startActivity(intent);
+                    finish();
                     break;
 
                 case R.id.exitButton:
