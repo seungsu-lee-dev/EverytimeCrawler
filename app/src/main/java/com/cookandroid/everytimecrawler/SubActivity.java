@@ -145,7 +145,7 @@ public class SubActivity extends AppCompatActivity {
                 case R.id.btnLoad:
                     intent = new Intent(getApplicationContext(),LoadList.class);
                     startActivity(intent);
-                    finish();
+//                    finish();
                     break;
 
                 case R.id.btnRun:
