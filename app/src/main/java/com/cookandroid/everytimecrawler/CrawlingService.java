@@ -15,19 +15,19 @@ public class CrawlingService extends Service {
 
     @Override
     public void onCreate() {
-        android.util.Log.e("CrawlingService","onCreate");
+        android.util.Log.e("com.cookandroid.everytimecrawler.CrawlingService","onCreate");
         super.onCreate();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        android.util.Log.e("CrawlingService","onStartCommand");
+        android.util.Log.e("com.cookandroid.everytimecrawler.CrawlingService","onStartCommand");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
-        android.util.Log.e("CrawlingService","onDestroy");
+        android.util.Log.e("com.cookandroid.everytimecrawler.CrawlingService","onDestroy");
         super.onDestroy();
     }
 }

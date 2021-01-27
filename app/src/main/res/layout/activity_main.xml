@@ -75,7 +75,8 @@
             android:background="@android:color/transparent"
             android:src="@drawable/round_login2"
             android:clickable="true"
-            android:layout_weight="0.7"/>/>
+            android:onClick="loginbutton"
+            android:layout_weight="0.7"/>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

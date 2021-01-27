@@ -1,124 +1,93 @@
 package com.cookandroid.everytimecrawler;
 
-
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import com.cookandroid.everytimecrawler.Room.AppDatabase;
-import com.cookandroid.everytimecrawler.Room.User;
 import java.util.ArrayList;
-import java.util.List;
 
 public class SubActivity extends AppCompatActivity {
-    AppDatabase db;
+
+//--------------------------< 객체 선언 > --------------------------
+    ImageButton setting11;
     ArrayList<String> Items;
     ArrayAdapter<String> Adapter;
     ListView listView;
-    ImageButton btnAdd, btnDel, btnSave, btnSetting, btnLoad, btnRun;
+    ImageButton btnAdd, btnDel;
     EditText editText;
-    Intent intent;
-    Intent intent1;
-    Intent intent2;
-    private String detail;
+    ImageButton save1,load;
+//-------------------------------------------------------------------
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.sub_main);
+        setContentView(R.layout.sub_main); // sub_main의 레이아웃과 연결
 
-        db = AppDatabase.getInstance(this);
         Items = new ArrayList<String>();
+
+        // findViewById : 해당 아이디로부터 대응되는 뷰객체를 찾는 메서드
+
+        //  listview 객체랑 activity_main의 R.id.listView랑 연결
+        listView = (ListView) findViewById(R.id.listView);
+
+        // 어텝터 생성
         Adapter = new ArrayAdapter<String>(this,
                 R.layout.simple_list_item, Items);
-        detail = getIntent().getStringExtra("data");
 
-        ini();
-
-        //불러오기
-        if(detail != null ) {
-            detail = detail.replaceAll("\\[","").replaceAll("\\]","");
-            String [] str = detail.split("\\s*,\\s*");
-            for(int i = 0; i < str.length; i++) {
-                Items.add(str[i]);
-            }
-        }
-
-        btnSetting = (ImageButton) findViewById(R.id.btnSetting);
-
-        btnSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                make_title();
-            }
-        });
-    }
-
-    private void make_title() {
-        EditText et = new EditText(getApplicationContext());
-        AlertDialog.Builder builder = new AlertDialog.Builder(SubActivity.this);
-        builder.setTitle("제목을 입력하세요");
-        builder.setView(et);
-
-        builder.setPositiveButton("저장", (dialog, which) -> {
-            String s = et.getText().toString();
-            // db에 저장하기
-            ArrayList<String> itemList = new ArrayList<>();
-            for (int i = 0; i < listView.getCount(); i++) {
-                String s1 = (String) listView.getItemAtPosition(i);
-                itemList.add(s1);
-            }
-            String s1 = String.valueOf(itemList);
-            User memo = new User(s,s1);
-            db.userDao().insert(memo);
-            Toast.makeText(getApplicationContext(), "저장되었습니다", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-
-        });
-
-        builder.setNegativeButton("취소", (dialog, which) -> {
-            dialog.dismiss();
-        });
-
-        builder.show();
-    }
-
-    private void ini() {
-        listView = (ListView) findViewById(R.id.listView);
+        // 어뎁터 설정 / 위에 adater설정한거를 listview에 넣는다
         listView.setAdapter(Adapter);
+
+
+        // 리스트뷰에 choicemode 속성을 설정해야 선택기능 사용가능 / 여기말고 main.xml에서도 설정가능
         listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
         editText = (EditText) findViewById(R.id.editText);
+
+        load = (ImageButton) findViewById(R.id.loadlist1);
+//-----------------------< add del >------------------------------------
         btnAdd = (ImageButton) findViewById(R.id.btnAdd);
         btnDel = (ImageButton) findViewById(R.id.btnDel);
-        btnSave = (ImageButton) findViewById(R.id.btnSave);
-        btnLoad = (ImageButton) findViewById(R.id.btnLoad);
-        btnRun = (ImageButton) findViewById(R.id.btnRun);
 
         btnAdd.setOnClickListener(listener);
         btnDel.setOnClickListener(listener);
-        btnSave.setOnClickListener(listener);
-        btnLoad.setOnClickListener(listener);
-        btnRun.setOnClickListener(listener);
+
+//-------------------------- setting 버튼 부분 -----------------------------------
+
+        setting11 = (ImageButton) findViewById(R.id.setting11);
+
+        setting11.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent11 = new Intent(getApplicationContext(), MainActivity.class);
+                startActivity(intent11);
+            }
+        });
+
+        save1 = (ImageButton) findViewById(R.id.savelist11);
+
+
+
     }
 
+
+//-----------------------------------------------------------------------------------
+//    public void onClick(View view){
+//        switch (view.getId()){
+//            case R.id.savelist11:
+//                startActivity(new Intent(this, Dialog.class));
+//                break;
+ //       }
+    //}
+//---------------------------<  add , del 버튼 >-------------------------------------
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -128,10 +97,9 @@ public class SubActivity extends AppCompatActivity {
                     if (text.length() != 0) {
                         Items.add(text);
                         editText.setText("");
-                        Adapter.notifyDataSetChanged();
+                        Adapter.notifyDataSetChanged(); // listview 갱신할때 사용하는 메소드
                     }
                     break;
-
                 case R.id.btnDel:
                     int pos;
                     pos = listView.getCheckedItemPosition();
@@ -141,22 +109,32 @@ public class SubActivity extends AppCompatActivity {
                         Adapter.notifyDataSetChanged();
                     }
                     break;
-
-                case R.id.btnLoad:
-                    intent = new Intent(getApplicationContext(),LoadList.class);
-                    startActivity(intent);
-                    finish();
-                    break;
-
-                case R.id.btnRun:
-                    intent1 = new Intent(getApplicationContext(), CrawlingService.class);
-                    startService(intent1);
-//                    android.util.Log.i("크롤링 인텐트로 넘어감", "startService()");
-                    android.util.Log.i("크롤링 인텐트로 넘어감", "Information message");
-                    intent2 = new Intent(getApplicationContext(), loading.class);
-                    startActivity(intent2);
-                    break;
             }
+
         }
     };
+
+//-------------------------------- 팝업창 ------------------------------
+    public void OnClickHandler(View view)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("").setMessage("목록이 추가되었습니다");
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener(){
+            @Override
+            public void onClick(DialogInterface dialog, int id)
+            {
+                Toast.makeText(getApplicationContext(), "OK Click", Toast.LENGTH_SHORT).show();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+
+        alertDialog.show();
+    }
 }
+
+
+
+
+
+
