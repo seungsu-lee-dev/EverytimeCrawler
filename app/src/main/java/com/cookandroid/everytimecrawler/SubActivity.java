@@ -6,17 +6,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.cookandroid.everytimecrawler.Room.AppDatabase;
 import com.cookandroid.everytimecrawler.Room.User;
+import com.lakue.lakuepopupactivity.PopupActivity;
+import com.lakue.lakuepopupactivity.PopupResult;
+import com.lakue.lakuepopupactivity.PopupType;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class SubActivity extends AppCompatActivity {
     AppDatabase db;
@@ -28,6 +32,7 @@ public class SubActivity extends AppCompatActivity {
     Intent intent;
     Intent intent1;
     Intent intent2;
+    Button btnImg;
     private String detail;
 
     @Override
@@ -70,6 +75,30 @@ public class SubActivity extends AppCompatActivity {
             }
         });
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            //데이터 받기
+
+            if(requestCode == 4){
+                com.lakue.lakuepopupactivity.PopupResult result = (com.lakue.lakuepopupactivity.PopupResult) data.getSerializableExtra("result");
+                if(result == com.lakue.lakuepopupactivity.PopupResult.LEFT){
+                    // 작성 코드
+                    Toast.makeText(this, "LEFT", Toast.LENGTH_SHORT).show();
+
+                } else if(result == com.lakue.lakuepopupactivity.PopupResult.RIGHT){
+                    // 작성 코드
+                    Toast.makeText(this, "RIGHT", Toast.LENGTH_SHORT).show();
+
+                } else if(result == PopupResult.IMAGE){
+                    // 작성 코드
+                    Toast.makeText(this, "IMAGE", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }
+    }
 
     private void make_title() {
         EditText et = new EditText(getApplicationContext());
@@ -111,18 +140,30 @@ public class SubActivity extends AppCompatActivity {
         btnSave = (ImageButton) findViewById(R.id.btnSave);
         btnLoad = (ImageButton) findViewById(R.id.btnLoad);
         btnRun = (ImageButton) findViewById(R.id.btnRun);
+        btnImg = (Button) findViewById(R.id.btnimg);
 
         btnAdd.setOnClickListener(listener);
         btnDel.setOnClickListener(listener);
         btnSave.setOnClickListener(listener);
         btnLoad.setOnClickListener(listener);
         btnRun.setOnClickListener(listener);
+        btnImg.setOnClickListener(listener);
+
     }
 
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+                case R.id.btnimg:
+                    Intent intent = new Intent(getBaseContext(), PopupActivity.class);
+                    intent.putExtra("type", PopupType.IMAGE);
+                    intent.putExtra("title", "https://blogfiles.pstatic.net/MjAyMTAxMjZfMjM4/MDAxNjExNjYwNDU1MTUz.Z6IkQhuBa-O6BmiBfnlWybZR8iBQ0CSwN6RlIFqsYagg.Gqlc7lJGfYCHJjShjm_wO5FsH0PShs5ZNsrQjNqGoukg.PNG.hhhh7611/abc.png");
+                    intent.putExtra("buttonLeft", "종료");
+                    intent.putExtra("buttonRight", "바로가기");
+                    startActivityForResult(intent, 4);
+                    break;
+
                 case R.id.btnAdd:
                     String text = editText.getText().toString();
                     if (text.length() != 0) {

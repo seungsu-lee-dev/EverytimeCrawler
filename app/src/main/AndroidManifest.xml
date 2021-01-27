@@ -27,5 +27,8 @@
         <activity android:name=".loading"
             android:windowSoftInputMode="adjustPan">
         </activity>
+        <activity
+            android:name=".Pop.PopupActivity"
+            android:theme="@android:style/Theme.Dialog"></activity>
     </application>
 </manifest>
