@@ -53,7 +53,8 @@ public class LoadList extends AppCompatActivity {
     }
 
     public void move() {
-        Intent intent = new Intent(getApplicationContext(),SubActivity.class);
-        startActivity(intent);
+//        Intent intent = new Intent(getApplicationContext(),SubActivity.class);
+//        startActivity(intent);
+        finish();
     }
 }
