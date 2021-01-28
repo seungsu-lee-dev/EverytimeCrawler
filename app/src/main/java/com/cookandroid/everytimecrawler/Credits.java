@@ -10,10 +10,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Credits extends AppCompatActivity {
-    private TextView textView;
+    private TextView textView,textView2;
     private TextView title;
 
-    private Animation animation;
+    private Animation animation, animation2;
+
 
 
     @Override
@@ -21,24 +22,34 @@ public class Credits extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.credits);
 
-        animation =  AnimationUtils.loadAnimation(getApplicationContext(),R.anim.credits);
 
+        animation =  AnimationUtils.loadAnimation(getApplicationContext(),R.anim.credits);
+        animation2 =  AnimationUtils.loadAnimation(getApplicationContext(),R.anim.credits2);
 
         title = (TextView) findViewById(R.id.credit2);
         textView = (TextView) findViewById(R.id.credit);
+        textView2 = (TextView) findViewById(R.id.credit3);
 
 
-        title.setText("CREDITS \n" + "\n");
+        title.setText("CREDITS \n");
 
-        textView.setText("기획 및 제공"+"                      DOT\n\n" +
-                "project Manager"+"             이승수\n\n"
-                +"Full stack Developer"+"      이승수,이치형\n\n"
-                +"Front End developer"+"       이동희\n\n"
-                +"Designer"+"                           이동희\n\n"
-                +"Thanks to contributor"+"     박경인");
+        textView.setText("기획 및 제공\n\n" +
+                "Project Manager\n\n"
+                +"Full stack Developer\n\n"
+                +"Front End developer\n\n"
+                +"Designer\n\n"
+                +"Thanks to contributor");
 
-        title.startAnimation(animation);
+        textView2.setText("DOT\n\n" +
+                " 이승수\n\n"
+                +" 이승수, 이치형\n\n"
+                +" 이동희\n\n"
+                +" 이동희\n\n"
+                +" 박경인");
+
+        title.startAnimation(animation2);
         textView.startAnimation(animation);
+        textView2.startAnimation(animation);
     }
 
 }
