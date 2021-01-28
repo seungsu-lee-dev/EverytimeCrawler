@@ -27,5 +27,8 @@
         <activity android:name=".loading"
             android:windowSoftInputMode="adjustPan">
         </activity>
+        <activity android:name=".Credits">
+
+        </activity>
     </application>
 </manifest>

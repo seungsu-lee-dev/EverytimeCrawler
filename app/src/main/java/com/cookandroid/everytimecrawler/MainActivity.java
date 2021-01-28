@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     Intent intent;
     ImageButton loginbutton;
     LoginThread thread;
+    Button dot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,14 @@ public class MainActivity extends AppCompatActivity {
         login_password = (EditText) findViewById(R.id.login_password);
 
         loginbutton = (ImageButton) findViewById(R.id.loginbutton);
+        dot = (Button) findViewById(R.id.btndot);
+        dot.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),Credits.class));
+            }
+        });
+
 
         loginbutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

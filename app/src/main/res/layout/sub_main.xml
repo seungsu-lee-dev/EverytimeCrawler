@@ -174,7 +174,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@color/colorNam"
+        android:background="#00000000"
         android:text="Copyright by DOT"
         android:textColor="@color/colorGreen"
         ></Button>
