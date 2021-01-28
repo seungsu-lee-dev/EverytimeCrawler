@@ -99,7 +99,6 @@ public class SubActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             //데이터 받기
-
             if(requestCode == 4){
                 com.lakue.lakuepopupactivity.PopupResult result = (com.lakue.lakuepopupactivity.PopupResult) data.getSerializableExtra("result");
                 if(result == com.lakue.lakuepopupactivity.PopupResult.LEFT){
@@ -110,7 +109,7 @@ public class SubActivity extends AppCompatActivity {
                     // 작성 코드
                     Toast.makeText(this, "RIGHT", Toast.LENGTH_SHORT).show();
 
-                } else if(result == PopupResult.IMAGE){
+                } else if(result == com.lakue.lakuepopupactivity.PopupResult.IMAGE){
                     // 작성 코드
                     Toast.makeText(this, "IMAGE", Toast.LENGTH_SHORT).show();
 
@@ -149,7 +148,7 @@ public class SubActivity extends AppCompatActivity {
         builder.show();
     }
 
-//------------------------< sub main 버튼 부분 >----------------------
+//------------------------< sub main 버튼 부분 >----------------------------------
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -205,4 +204,15 @@ public class SubActivity extends AppCompatActivity {
             }
         }
     };
+
+//------------------------< enum 부분 >-----------------------------------------
+    enum PopupGravity {
+        CENTER,RIGHT,LEFT
+    }
+    enum PopupResult{
+        LEFT,CENTER,RIGHT,IMAGE
+    }
+    enum Type{
+        NORMAL, SELECT, ERROR, IMAGE
+    }
 }

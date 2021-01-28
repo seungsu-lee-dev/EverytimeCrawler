@@ -1,4 +1,4 @@
-package com.cookandroid.everytimecrawler.Pop;
+package com.cookandroid.everytimecrawler;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,34 +37,34 @@ public class PopupActivity extends Activity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //데이터 가져오기
         Intent intent = getIntent();
-        com.lakue.lakuepopupactivity.PopupType type = (com.lakue.lakuepopupactivity.PopupType) intent.getSerializableExtra("type");
+        PopupType type = (PopupType) intent.getSerializableExtra("type");
 
         String title = "";
         String content = "";
         String buttonCenter = "";
         String buttonLeft = "";
         String buttonRight = "";
-        com.lakue.lakuepopupactivity.PopupGravity gravity;
+        PopupGravity gravity;
 
-        if (type == com.lakue.lakuepopupactivity.PopupType.NORMAL) {
+        if (type == PopupType.NORMAL) {
             setContentView(com.lakue.lakuepopupactivity.R.layout.activity_popup);
             title = intent.getStringExtra("title");
             content = intent.getStringExtra("content");
             buttonCenter = intent.getStringExtra("buttonCenter");
-            gravity = (com.lakue.lakuepopupactivity.PopupGravity) intent.getSerializableExtra("gravity");
+            gravity = (PopupGravity) intent.getSerializableExtra("gravity");
 
             //UI 객체생성
             tv_title = (TextView) findViewById(com.lakue.lakuepopupactivity.R.id.tv_title);
             tv_content = (TextView) findViewById(com.lakue.lakuepopupactivity.R.id.tv_content);
             btn_ok = (Button) findViewById(com.lakue.lakuepopupactivity.R.id.btn_ok);
 
-            if(gravity == com.lakue.lakuepopupactivity.PopupGravity.CENTER){
+            if(gravity == PopupGravity.CENTER){
                 tv_title.setGravity(Gravity.CENTER);
                 tv_content.setGravity(Gravity.CENTER);
-            } else if(gravity == com.lakue.lakuepopupactivity.PopupGravity.LEFT){
+            } else if(gravity == PopupGravity.LEFT){
                 tv_title.setGravity(Gravity.LEFT);
                 tv_content.setGravity(Gravity.LEFT);
-            } else if(gravity == com.lakue.lakuepopupactivity.PopupGravity.RIGHT){
+            } else if(gravity == PopupGravity.RIGHT){
                 tv_title.setGravity(Gravity.RIGHT);
                 tv_content.setGravity(Gravity.RIGHT);
             }
@@ -85,13 +85,13 @@ public class PopupActivity extends Activity {
                     finish();
                 }
             });
-        } else if (type == com.lakue.lakuepopupactivity.PopupType.SELECT) {
+        } else if (type == PopupType.SELECT) {
             setContentView(com.lakue.lakuepopupactivity.R.layout.activity_popup_select);
             title = intent.getStringExtra("title");
             content = intent.getStringExtra("content");
             buttonLeft = intent.getStringExtra("buttonLeft");
             buttonRight = intent.getStringExtra("buttonRight");
-            gravity = (com.lakue.lakuepopupactivity.PopupGravity) intent.getSerializableExtra("gravity");
+            gravity = (PopupGravity) intent.getSerializableExtra("gravity");
 
             //UI 객체생성
             tv_title = (TextView) findViewById(com.lakue.lakuepopupactivity.R.id.tv_title);
@@ -99,13 +99,13 @@ public class PopupActivity extends Activity {
             btn_left = (Button) findViewById(com.lakue.lakuepopupactivity.R.id.btn_left);
             btn_right = (Button) findViewById(com.lakue.lakuepopupactivity.R.id.btn_right);
 
-            if(gravity == com.lakue.lakuepopupactivity.PopupGravity.CENTER){
+            if(gravity == PopupGravity.CENTER){
                 tv_title.setGravity(Gravity.CENTER);
                 tv_content.setGravity(Gravity.CENTER);
-            } else if(gravity == com.lakue.lakuepopupactivity.PopupGravity.LEFT){
+            } else if(gravity == PopupGravity.LEFT){
                 tv_title.setGravity(Gravity.LEFT);
                 tv_content.setGravity(Gravity.LEFT);
-            } else if(gravity == com.lakue.lakuepopupactivity.PopupGravity.RIGHT){
+            } else if(gravity == PopupGravity.RIGHT){
                 tv_title.setGravity(Gravity.RIGHT);
                 tv_content.setGravity(Gravity.RIGHT);
             }
@@ -140,7 +140,7 @@ public class PopupActivity extends Activity {
                     finish();
                 }
             });
-        } else if (type == com.lakue.lakuepopupactivity.PopupType.ERROR) {
+        } else if (type == PopupType.ERROR) {
             setContentView(com.lakue.lakuepopupactivity.R.layout.activity_popup_error);
             title = intent.getStringExtra("title");
             content = intent.getStringExtra("content");
