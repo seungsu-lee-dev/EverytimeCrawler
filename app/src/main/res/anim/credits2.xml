@@ -3,9 +3,9 @@
     android:fillAfter="true">
     <translate
         android:interpolator="@android:anim/linear_interpolator"
-        android:fromYDelta="100%p"
+        android:fromYDelta="120%p"
         android:toYDelta="-100%p"
-        android:duration = "10000"
+        android:duration = "10500"
 
         >
 

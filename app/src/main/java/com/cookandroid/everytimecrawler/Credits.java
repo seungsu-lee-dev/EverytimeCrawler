@@ -5,6 +5,7 @@ import android.text.SpannableString;
 import android.text.style.LeadingMarginSpan;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,7 +16,7 @@ public class Credits extends AppCompatActivity {
 
     private Animation animation, animation2;
 
-
+    LinearLayout page1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -30,6 +31,7 @@ public class Credits extends AppCompatActivity {
         textView = (TextView) findViewById(R.id.credit);
         textView2 = (TextView) findViewById(R.id.credit3);
 
+        page1 = findViewById(R.id.credit4);
 
         title.setText("CREDITS \n");
 
@@ -47,9 +49,11 @@ public class Credits extends AppCompatActivity {
                 +" 이동희\n\n"
                 +" 박경인");
 
-        title.startAnimation(animation2);
+       /* title.startAnimation(animation2);
         textView.startAnimation(animation);
-        textView2.startAnimation(animation);
+        textView2.startAnimation(animation);*/
+        page1.startAnimation(animation);
+
     }
 
 }
