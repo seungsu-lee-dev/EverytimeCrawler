@@ -11,6 +11,7 @@
     android:id="@+id/credit4"
     android:orientation="vertical"
     android:background="@color/colorBlack"
+
     >
 
     <TextView
@@ -21,8 +22,6 @@
         android:gravity="center_horizontal"
         android:textColor="@color/colorGreen"
         android:textStyle="bold"
-
-        android:layout_weight="0.3"
         android:textSize="40sp">
 
     </TextView>
@@ -32,21 +31,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="0.7"
         android:id="@+id/page2"
         >
 
 
         <TextView
             android:id="@+id/credit"
-            android:text="text1"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@color/colorGreen"
             android:layout_gravity="center"
-
+            android:gravity="center"
 
             >
 
@@ -54,7 +51,7 @@
 
         <TextView
             android:id="@+id/credit3"
-            android:text="text2"
+
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -65,9 +62,9 @@
             >
 
         </TextView>
+
     </LinearLayout>
 
 
-
-
-</LinearLayout></LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Credits extends AppCompatActivity {
     private TextView textView,textView2;
-    private TextView title;
+    private TextView title,soon;
 
     private Animation animation, animation2;
 
@@ -30,7 +30,7 @@ public class Credits extends AppCompatActivity {
         title = (TextView) findViewById(R.id.credit2);
         textView = (TextView) findViewById(R.id.credit);
         textView2 = (TextView) findViewById(R.id.credit3);
-
+       // soon = (TextView) findViewById(R.id.soon);
         page1 = findViewById(R.id.credit4);
 
         title.setText("CREDITS \n");
@@ -48,6 +48,7 @@ public class Credits extends AppCompatActivity {
                 +" 이동희\n\n"
                 +" 이동희\n\n"
                 +" 박경인");
+       // soon.setText("Coming soon \n Pandemic");
 
        /* title.startAnimation(animation2);
         textView.startAnimation(animation);
