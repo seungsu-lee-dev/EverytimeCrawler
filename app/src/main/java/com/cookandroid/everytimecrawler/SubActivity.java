@@ -6,19 +6,24 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.cookandroid.everytimecrawler.Room.AppDatabase;
 import com.cookandroid.everytimecrawler.Room.User;
+import com.lakue.lakuepopupactivity.PopupActivity;
+import com.lakue.lakuepopupactivity.PopupResult;
+import com.lakue.lakuepopupactivity.PopupType;
+
 import java.util.ArrayList;
-import java.util.List;
 
 public class SubActivity extends AppCompatActivity {
+    //-------------------------< 전역 변수 >---------------------------------
     AppDatabase db;
     ArrayList<String> Items;
     ArrayAdapter<String> Adapter;
@@ -28,49 +33,92 @@ public class SubActivity extends AppCompatActivity {
     Intent intent;
     Intent intent1;
     Intent intent2;
+    Button btnImg;
     private String detail;
 
-    @Override
+    //---------------------------------------------------------------------
+    @Override // main같은 역할 / 클래스마다 다 필요 / 레이아수 생성,초기화 컴포넌트를 불러오는 역할
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //위에 상단바 안뜨게 하기
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        //sub main.xml 연결
         setContentView(R.layout.sub_main);
 
+        ini();
+
+        //불러오기
+        if (detail != null) {
+            detail = detail.replaceAll("\\[", "").replaceAll("\\]", "");
+            String[] str = detail.split("\\s*,\\s*");
+            for (int i = 0; i < str.length; i++) {
+                Items.add(str[i]);
+            }
+        }
+
+    }
+
+    //------------------------< sub main과의 연결 >-------------------------
+    private void ini() {
         db = AppDatabase.getInstance(this);
         Items = new ArrayList<String>();
         Adapter = new ArrayAdapter<String>(this,
                 R.layout.simple_list_item, Items);
         detail = getIntent().getStringExtra("data");
 
-        ini();
+        listView = (ListView) findViewById(R.id.listView);
+        listView.setAdapter(Adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
-        //불러오기
-        if(detail != null ) {
-            detail = detail.replaceAll("\\[","").replaceAll("\\]","");
-            String [] str = detail.split("\\s*,\\s*");
-            for(int i = 0; i < str.length; i++) {
-                Items.add(str[i]);
-            }
-        }
-
+        editText = (EditText) findViewById(R.id.editText);
+        btnAdd = (ImageButton) findViewById(R.id.btnAdd);
+        btnDel = (ImageButton) findViewById(R.id.btnDel);
+        btnSave = (ImageButton) findViewById(R.id.btnSave);
+        btnLoad = (ImageButton) findViewById(R.id.btnLoad);
+        btnRun = (ImageButton) findViewById(R.id.btnRun);
+        btnImg = (Button) findViewById(R.id.btnimg);
         btnSetting = (ImageButton) findViewById(R.id.btnSetting);
 
-        btnSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnAdd.setOnClickListener(listener);
+        btnDel.setOnClickListener(listener);
+        btnSave.setOnClickListener(listener);
+        btnLoad.setOnClickListener(listener);
+        btnRun.setOnClickListener(listener);
+        btnImg.setOnClickListener(listener);
+        btnSetting.setOnClickListener(listener);
+        btnSave.setOnClickListener(listener);
 
-            }
-        });
-
-        btnSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                make_title();
-            }
-        });
     }
 
+    //-------------------------< copyright 부분 >-----------------------------------
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            //데이터 받기
+            if (requestCode == 4) {
+                com.lakue.lakuepopupactivity.PopupResult result = (com.lakue.lakuepopupactivity.PopupResult) data.getSerializableExtra("result");
+                if (result == com.lakue.lakuepopupactivity.PopupResult.LEFT) {
+                    // 작성 코드
+                    Toast.makeText(this, "LEFT", Toast.LENGTH_SHORT).show();
+
+                } else if (result == com.lakue.lakuepopupactivity.PopupResult.RIGHT) {
+                    // 작성 코드
+                    Toast.makeText(this, "RIGHT", Toast.LENGTH_SHORT).show();
+
+                } else if (result == com.lakue.lakuepopupactivity.PopupResult.IMAGE) {
+                    // 작성 코드
+                    Toast.makeText(this, "IMAGE", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        }
+    }
+
+    //-------------------------< savelist 부분 >-----------------------------------
     private void make_title() {
         EditText et = new EditText(getApplicationContext());
         AlertDialog.Builder builder = new AlertDialog.Builder(SubActivity.this);
@@ -100,29 +148,26 @@ public class SubActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void ini() {
-        listView = (ListView) findViewById(R.id.listView);
-        listView.setAdapter(Adapter);
-        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-
-        editText = (EditText) findViewById(R.id.editText);
-        btnAdd = (ImageButton) findViewById(R.id.btnAdd);
-        btnDel = (ImageButton) findViewById(R.id.btnDel);
-        btnSave = (ImageButton) findViewById(R.id.btnSave);
-        btnLoad = (ImageButton) findViewById(R.id.btnLoad);
-        btnRun = (ImageButton) findViewById(R.id.btnRun);
-
-        btnAdd.setOnClickListener(listener);
-        btnDel.setOnClickListener(listener);
-        btnSave.setOnClickListener(listener);
-        btnLoad.setOnClickListener(listener);
-        btnRun.setOnClickListener(listener);
-    }
-
+    //------------------------< sub main 버튼 부분 >----------------------------------
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(View v) { // 추가 , 삭제 , 리스트 저장 , 리스트불러오기 , 세팅 , 런
             switch (v.getId()) {
+                case R.id.btnSave:
+                    make_title();
+                    break;
+                case R.id.btnSetting:
+                    break;
+
+                case R.id.btnimg:
+                    Intent intent = new Intent(getBaseContext(), PopupActivity.class);
+                    intent.putExtra("type", PopupType.IMAGE);
+                    intent.putExtra("title", "https://blogfiles.pstatic.net/MjAyMTAxMjZfMjM4/MDAxNjExNjYwNDU1MTUz.Z6IkQhuBa-O6BmiBfnlWybZR8iBQ0CSwN6RlIFqsYagg.Gqlc7lJGfYCHJjShjm_wO5FsH0PShs5ZNsrQjNqGoukg.PNG.hhhh7611/abc.png");
+                    intent.putExtra("buttonLeft", "종료");
+                    intent.putExtra("buttonRight", "바로가기");
+                    startActivityForResult(intent, 4);
+                    break;
+
                 case R.id.btnAdd:
                     String text = editText.getText().toString();
                     if (text.length() != 0) {
@@ -159,4 +204,15 @@ public class SubActivity extends AppCompatActivity {
             }
         }
     };
+
+    //------------------------< enum 부분 >-----------------------------------------
+    enum PopupGravity {
+        CENTER,RIGHT,LEFT
+    }
+    enum PopupResult{
+        LEFT,CENTER,RIGHT,IMAGE
+    }
+    enum Type{
+        NORMAL, SELECT, ERROR, IMAGE
+    }
 }
