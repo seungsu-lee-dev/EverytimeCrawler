@@ -58,13 +58,13 @@
             android:textColor="@color/colorWhite"
             android:layout_weight="0.3"/>
 
-<!--        <Button-->
-<!--            android:id="@+id/buttonConnect"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="13dp"-->
-<!--            android:text="로그인" />-->
+        <!--        <Button-->
+        <!--            android:id="@+id/buttonConnect"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_marginTop="13dp"-->
+        <!--            android:text="로그인" />-->
 
         <ImageButton
             android:id="@+id/loginbutton"
@@ -85,7 +85,6 @@
 
     </LinearLayout>
 
-
     <Button
         android:id="@+id/btndot"
         android:layout_width="wrap_content"
@@ -95,6 +94,6 @@
         android:background="#00000000"
         android:text="Copyright by DOT"
         android:textColor="@color/colorGreen"
-        ></Button>
+        />
 
 </LinearLayout>

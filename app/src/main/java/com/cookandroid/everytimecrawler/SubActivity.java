@@ -23,7 +23,7 @@ import com.lakue.lakuepopupactivity.PopupType;
 import java.util.ArrayList;
 
 public class SubActivity extends AppCompatActivity {
-//-------------------------< 전역 변수 >---------------------------------
+    //-------------------------< 전역 변수 >---------------------------------
     AppDatabase db;
     ArrayList<String> Items;
     ArrayAdapter<String> Adapter;
@@ -36,8 +36,8 @@ public class SubActivity extends AppCompatActivity {
     Button btnImg;
     private String detail;
 
-//---------------------------------------------------------------------
-    @Override // main같은 역활 / 클래스마다 다 필요 / 레이아수 생성,초기화 컴포넌트를 불러오는 역활
+    //---------------------------------------------------------------------
+    @Override // main같은 역할 / 클래스마다 다 필요 / 레이아수 생성,초기화 컴포넌트를 불러오는 역할
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -51,17 +51,17 @@ public class SubActivity extends AppCompatActivity {
         ini();
 
         //불러오기
-        if(detail != null ) {
-            detail = detail.replaceAll("\\[","").replaceAll("\\]","");
-            String [] str = detail.split("\\s*,\\s*");
-            for(int i = 0; i < str.length; i++) {
+        if (detail != null) {
+            detail = detail.replaceAll("\\[", "").replaceAll("\\]", "");
+            String[] str = detail.split("\\s*,\\s*");
+            for (int i = 0; i < str.length; i++) {
                 Items.add(str[i]);
             }
         }
 
     }
 
-//------------------------< sub main과의 연결 >-------------------------
+    //------------------------< sub main과의 연결 >-------------------------
     private void ini() {
         db = AppDatabase.getInstance(this);
         Items = new ArrayList<String>();
@@ -93,32 +93,32 @@ public class SubActivity extends AppCompatActivity {
 
     }
 
-//-------------------------< copyright 부분 >-----------------------------------
+    //-------------------------< copyright 부분 >-----------------------------------
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             //데이터 받기
-            if(requestCode == 4){
+            if (requestCode == 4) {
                 com.lakue.lakuepopupactivity.PopupResult result = (com.lakue.lakuepopupactivity.PopupResult) data.getSerializableExtra("result");
-                if(result == com.lakue.lakuepopupactivity.PopupResult.LEFT){
+                if (result == com.lakue.lakuepopupactivity.PopupResult.LEFT) {
                     // 작성 코드
                     Toast.makeText(this, "LEFT", Toast.LENGTH_SHORT).show();
 
-                } else if(result == com.lakue.lakuepopupactivity.PopupResult.RIGHT){
+                } else if (result == com.lakue.lakuepopupactivity.PopupResult.RIGHT) {
                     // 작성 코드
                     Toast.makeText(this, "RIGHT", Toast.LENGTH_SHORT).show();
 
-                } else if(result == com.lakue.lakuepopupactivity.PopupResult.IMAGE){
+                } else if (result == com.lakue.lakuepopupactivity.PopupResult.IMAGE) {
                     // 작성 코드
                     Toast.makeText(this, "IMAGE", Toast.LENGTH_SHORT).show();
 
                 }
             }
         }
-    }
+    }//
 
-//-------------------------< savelist 부분 >-----------------------------------
+    //-------------------------< savelist 부분 >-----------------------------------
     private void make_title() {
         EditText et = new EditText(getApplicationContext());
         AlertDialog.Builder builder = new AlertDialog.Builder(SubActivity.this);
@@ -148,16 +148,16 @@ public class SubActivity extends AppCompatActivity {
         builder.show();
     }
 
-//------------------------< sub main 버튼 부분 >----------------------------------
+    //------------------------< sub main 버튼 부분 >----------------------------------
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
-            switch (v.getId()) { // 추가 , 삭제 , 리스트 저장 , 리스트불러오기 , 세팅 , 런
+        public void onClick(View v) { // 추가 , 삭제 , 리스트 저장 , 리스트불러오기 , 세팅 , 런
+            switch (v.getId()) {
                 case R.id.btnSave:
                     make_title();
                     break;
                 case R.id.btnSetting:
-                   break;
+                    break;
 
                 case R.id.btnimg:
                     Intent intent = new Intent(getBaseContext(), PopupActivity.class);
@@ -205,7 +205,7 @@ public class SubActivity extends AppCompatActivity {
         }
     };
 
-//------------------------< enum 부분 >-----------------------------------------
+    //------------------------< enum 부분 >-----------------------------------------
     enum PopupGravity {
         CENTER,RIGHT,LEFT
     }

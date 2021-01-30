@@ -5,66 +5,77 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/colorBlack">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/credit4"
-    android:orientation="vertical"
-    android:background="@color/colorBlack"
-
-    >
-
-    <TextView
-        android:id="@+id/credit2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        android:textColor="@color/colorGreen"
-        android:textStyle="bold"
-        android:textSize="40sp">
-
-    </TextView>
-
-
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/page2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/credit4"
+        android:orientation="vertical"
+        android:background="@color/colorBlack"
+
         >
 
-
         <TextView
-            android:id="@+id/credit"
-
+            android:id="@+id/credit2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
             android:textColor="@color/colorGreen"
-            android:layout_gravity="center"
-            android:gravity="center"
-
-            >
+            android:textStyle="bold"
+            android:textSize="40sp">
 
         </TextView>
 
-        <TextView
-            android:id="@+id/credit3"
 
-
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/colorWhite"
             android:layout_gravity="center"
-            android:gravity="center"
+            android:id="@+id/page2"
             >
 
+
+            <TextView
+                android:id="@+id/credit"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/colorGreen"
+                android:layout_gravity="center"
+                android:gravity="center"
+
+                >
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/credit3"
+
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/colorWhite"
+                android:layout_gravity="center"
+                android:gravity="center"
+                >
+
+            </TextView>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/soon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorGreen"
+            android:textStyle="bold"
+            android:textSize="40sp">
+
         </TextView>
-
-    </LinearLayout>
-
 
     </LinearLayout>
 </LinearLayout>

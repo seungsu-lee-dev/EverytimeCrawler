@@ -47,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         loginbutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 intent = new Intent(getApplicationContext(), SubActivity.class);
