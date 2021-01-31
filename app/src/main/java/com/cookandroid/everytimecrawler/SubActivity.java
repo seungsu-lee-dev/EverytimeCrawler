@@ -157,6 +157,8 @@ public class SubActivity extends AppCompatActivity {
                     make_title();
                     break;
                 case R.id.btnSetting:
+                    Items.clear();
+                    Adapter.notifyDataSetChanged();
                     break;
 
                 case R.id.btnimg:
