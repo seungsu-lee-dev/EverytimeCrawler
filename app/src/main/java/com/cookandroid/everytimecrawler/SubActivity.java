@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
+import androidx.room.Room;
 
 import com.cookandroid.everytimecrawler.Room.AppDatabase;
 import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
@@ -211,20 +212,37 @@ public class SubActivity extends AppCompatActivity {
 //                    String t = SC.getTitle();
 //                    System.out.println(t);
 //                    deleteData();
-                    sdbTask = sdb.ServiceControlDao().loadlastTask();
-                    if(sdbTask.getValue() == null) {
-                        // table is empty
-                        android.util.Log.i("테이블이 비어있음", "Information message");
-                        createData();
-                    } else {
-                        // table is not empty
+//                    sdbTask = sdb.ServiceControlDao().loadlastTask();
+//                    List<ServiceControlEntity> list = sdb.ServiceControlDao().getAll();
+//                    if(list == null) {
+//                    if(sdbTask.getValue() == null) {
+////                    if(sdb == null) {
+//                        // table is empty
+//                        android.util.Log.i("테이블이 비어있음", "Information message");
+//                        createData();
+//                    } else {
+//                        // table is not empty
+//                        String des = SC.getDes();
+//                        // OFF이면 ON으로 변경
+//                        if(des == "OFF") {
+//                            SC.setDes("ON");
+////                            onData();
+//                            break;
+//                        }
+//                    }
+                    String t = SC.getTitle();
+                    if(t == "check") {
+                        // table title이 check이면
+                        android.util.Log.i("title은 check", "Information message");
                         String des = SC.getDes();
-                        // OFF이면 ON으로 변경
                         if(des == "OFF") {
+                            android.util.Log.i("des는 OFF", "Information message");
                             SC.setDes("ON");
-//                            onData();
-                            break;
                         }
+                        android.util.Log.i("des는 ON", "Information message");
+                        break;
+                    } else {
+                        android.util.Log.i("controlTable 가져오기 오류", "Information message");
                     }
                     break;
 

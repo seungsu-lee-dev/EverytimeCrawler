@@ -24,8 +24,7 @@ public abstract class ServiceControlDatabase extends RoomDatabase {
         if(instance == null){
             instance =  Room.databaseBuilder(context.getApplicationContext(),
                     ServiceControlDatabase.class, "control_Database")
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
+                    .createFromAsset("database/control_Database")
                     .build();
         }
         return instance;
