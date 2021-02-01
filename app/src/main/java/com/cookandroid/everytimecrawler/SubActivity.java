@@ -13,18 +13,23 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 
 import com.cookandroid.everytimecrawler.Room.AppDatabase;
+import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
+import com.cookandroid.everytimecrawler.Room.ServiceControlEntity;
 import com.cookandroid.everytimecrawler.Room.User;
 import com.lakue.lakuepopupactivity.PopupActivity;
 import com.lakue.lakuepopupactivity.PopupResult;
 import com.lakue.lakuepopupactivity.PopupType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SubActivity extends AppCompatActivity {
     //-------------------------< 전역 변수 >---------------------------------
     AppDatabase db;
+    ServiceControlDatabase sdb;
     ArrayList<String> Items;
     ArrayAdapter<String> Adapter;
     ListView listView;
@@ -35,6 +40,9 @@ public class SubActivity extends AppCompatActivity {
     Intent intent2;
     Button btnImg;
     private String detail;
+    private List<ServiceControlEntity> checks;
+    ServiceControlEntity SC;
+    LiveData<ServiceControlEntity> sdbTask;
 
     //---------------------------------------------------------------------
     @Override // main같은 역할 / 클래스마다 다 필요 / 레이아수 생성,초기화 컴포넌트를 불러오는 역할
@@ -64,6 +72,7 @@ public class SubActivity extends AppCompatActivity {
     //------------------------< sub main과의 연결 >-------------------------
     private void ini() {
         db = AppDatabase.getInstance(this);
+        sdb = ServiceControlDatabase.getInstance(this);
         Items = new ArrayList<String>();
         Adapter = new ArrayAdapter<String>(this,
                 R.layout.simple_list_item, Items);
@@ -148,6 +157,43 @@ public class SubActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void createData() {
+        String c = "check";
+        String c1 = "ON";
+        ServiceControlEntity SC = new ServiceControlEntity(c, c1);
+        sdb.ServiceControlDao().insert(SC);
+    }
+
+    private void offData() {
+        String c = "check";
+        String newc1 = "OFF";
+        ServiceControlEntity SC = new ServiceControlEntity(c, newc1);
+        sdb.ServiceControlDao().update(SC);
+    }
+
+    private void onData() {
+        String c = "check";
+        String newc2 = "ON";
+        ServiceControlEntity SC = new ServiceControlEntity(c, newc2);
+        sdb.ServiceControlDao().update(SC);
+    }
+
+    //boolean
+    private void returnTrueFalse() {
+        checks = ServiceControlDatabase.getInstance(this).ServiceControlDao().getAll();
+        System.out.println(checks);
+//        if() {
+//            return true;
+//        }
+//        else {
+//            return false;
+//        }
+    }
+
+    private void deleteData() {
+        sdb.ServiceControlDao().deleteAll();
+    }
+
     //------------------------< sub main 버튼 부분 >----------------------------------
     private View.OnClickListener listener = new View.OnClickListener() {
         @Override
@@ -156,11 +202,34 @@ public class SubActivity extends AppCompatActivity {
                 case R.id.btnSave:
                     make_title();
                     break;
+
                 case R.id.btnSetting:
+//                    createData();
+//                    returnTrueFalse();
+//                    modifyData();
+//                    returnTrueFalse();
+//                    String t = SC.getTitle();
+//                    System.out.println(t);
+//                    deleteData();
+                    sdbTask = sdb.ServiceControlDao().loadlastTask();
+                    if(sdbTask.getValue() == null) {
+                        // table is empty
+                        android.util.Log.i("테이블이 비어있음", "Information message");
+                        createData();
+                    } else {
+                        // table is not empty
+                        String des = SC.getDes();
+                        // OFF이면 ON으로 변경
+                        if(des == "OFF") {
+                            SC.setDes("ON");
+//                            onData();
+                            break;
+                        }
+                    }
                     break;
 
                 case R.id.btnimg:
-                    Intent intent = new Intent(getBaseContext(), PopupActivity.class);
+                    intent = new Intent(getBaseContext(), PopupActivity.class);
                     intent.putExtra("type", PopupType.IMAGE);
                     intent.putExtra("title", "https://blogfiles.pstatic.net/MjAyMTAxMjZfMjM4/MDAxNjExNjYwNDU1MTUz.Z6IkQhuBa-O6BmiBfnlWybZR8iBQ0CSwN6RlIFqsYagg.Gqlc7lJGfYCHJjShjm_wO5FsH0PShs5ZNsrQjNqGoukg.PNG.hhhh7611/abc.png");
                     intent.putExtra("buttonLeft", "종료");
