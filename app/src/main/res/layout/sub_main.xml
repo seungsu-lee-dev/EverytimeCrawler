@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:background="@color/colorNam"
+    android:background="@drawable/back"
 
     >
 
@@ -26,11 +26,12 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:background="@drawable/newsearch1"
-            android:singleLine="true"
             android:hint="키워드를 입력해주세요"
             android:gravity="center"
             android:textColorHint="@color/colorGreen"
             android:textColor="@color/colorWhite"
+
+
             />
 
     </LinearLayout>
@@ -49,11 +50,16 @@
             android:id="@+id/listView"
             android:layout_width="290dp"
             android:layout_height="170dp"
+
+            android:choiceMode="singleChoice"
             android:layout_weight="1"
             android:divider="@color/colorWhite"
-            android:dividerHeight="1dp" />
-    </LinearLayout>
+            android:dividerHeight="1dp">
 
+        </ListView>
+
+    </LinearLayout>
+    <!-- choicemode 설정해야 선택기능 사용-->
 
 
 
@@ -75,6 +81,7 @@
             android:src="@drawable/add"
             android:layout_weight="1"
             android:layout_marginRight="25dp"
+
             />
 
         <ImageButton
@@ -120,7 +127,7 @@
 
             android:background="@android:color/transparent"
             android:clickable="true"
-            android:onClick="setting11"
+            android:onClick="btnSetting"
             android:layout_weight="1"
             android:src="@drawable/setting1" />
 
@@ -142,7 +149,7 @@
 
             android:background="@android:color/transparent"
             android:clickable="true"
-            android:onClick="getList"
+            android:onClick="btnLoad"
             android:src="@drawable/loadlist"
             android:layout_weight="1"
             android:layout_marginRight="25dp"/>
@@ -160,17 +167,16 @@
             android:src="@drawable/run" />
 
     </LinearLayout>
-    <TextView
-        android:id="@+id/textViewcopyright"
+
+    <Button
+        android:id="@+id/btnimg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
 
-        android:gravity="top"
-        android:text="copyright by DOT"
-        android:textColor="#03A9F4"
-        android:textSize="16dp"
-        android:layout_weight="1"
+        android:background="#00000000"
+        android:text="Copyright by DOT"
+        android:textColor="@color/colorGreen"
         />
 
 </LinearLayout>

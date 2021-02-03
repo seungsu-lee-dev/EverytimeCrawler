@@ -6,34 +6,36 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:orientation="vertical"
-    android:background="@color/colorNam"
+    android:background="@drawable/backv2"
     tools:context="com.cookandroid.everytimecrawler.MainActivity">
 
-    <TextView
-        android:id="@+id/textViewReciev"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="20sp"
-        android:text="Keyword Alarm for Everytime"
-        android:textColor="#03A9F4"
-        android:textSize="16dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/log5" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:layout_weight="8">
+        android:layout_weight="1">
 
         <EditText
             android:id="@+id/login_id"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="31dp"
+            android:layout_weight="0.3"
             android:ems="10"
             android:gravity="center"
             android:hint="아이디"
@@ -47,46 +49,51 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="10dp"
             android:ems="10"
             android:gravity="center"
             android:hint="비밀번호"
             android:textColorHint="@color/colorWhite"
             android:backgroundTint="@color/colorWhite"
             android:inputType="textPassword"
-            android:textColor="@color/colorWhite"/>
+            android:textColor="@color/colorWhite"
+            android:layout_weight="0.3"/>
 
-<!--        <Button-->
-<!--            android:id="@+id/buttonConnect"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="13dp"-->
-<!--            android:text="로그인" />-->
+        <!--        <Button-->
+        <!--            android:id="@+id/buttonConnect"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:layout_marginTop="13dp"-->
+        <!--            android:text="로그인" />-->
 
         <ImageButton
             android:id="@+id/loginbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="13dp"
+
             android:background="@android:color/transparent"
             android:src="@drawable/round_login2"
             android:clickable="true"
-            android:onClick="loginbutton"/>
+            android:layout_weight="0.7"/>/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/colorNam"
+            android:layout_weight="1"
+            />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textViewcopyright"
+    <Button
+        android:id="@+id/btndot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="20sp"
-        android:gravity="bottom"
-        android:text="copyright by DOT"
-        android:textColor="#03A9F4"
-        android:textSize="16dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:background="#00000000"
+        android:text="Copyright by DOT"
+        android:textColor="@color/colorGreen"
+        />
 
 </LinearLayout>

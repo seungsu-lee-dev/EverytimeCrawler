@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorNam"
+    android:background="@drawable/backv1"
     android:orientation="vertical">
 
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/loadingImage"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_weight="1"
-        android:background="@color/colorNam"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -28,21 +27,20 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/saveButton"
+            android:id="@+id/preButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            app:srcCompat="@drawable/pre" />
+
+        <ImageButton
+            android:id="@+id/exitButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             app:srcCompat="@drawable/exit" />
-
-        <ImageButton
-            android:id="@+id/imageButton4"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:onClick="onClickImageButton2"
-            app:srcCompat="@drawable/pre" />
     </LinearLayout>
 
 </LinearLayout>
