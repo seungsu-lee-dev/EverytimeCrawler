@@ -10,11 +10,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
+import com.cookandroid.everytimecrawler.Room.ServiceControlEntity;
+
 public class loading extends MainActivity {
     private ImageView loadingImage;
     private Animation anim;
     ImageButton exitButton, preButton;
     boolean isPaused = false;
+
+    ServiceControlDatabase sdb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +44,21 @@ public class loading extends MainActivity {
         loadingImage.setAnimation(anim);
     }
 
+    private void offData() {
+        String c = "check";
+        String newc1 = "OFF";
+        ServiceControlEntity SC = new ServiceControlEntity(c, newc1);
+        sdb.ServiceControlDao().update(SC);
+    }
+
     private View.OnClickListener listener = new View.OnClickListener() {
         public void onClick(View v) {
             switch(v.getId()) {
                 case R.id.loadingImage:
                     if(!isPaused) {
                         loadingImage.clearAnimation();
+                        // ON -> OFF
+                        offData();
 //                        stopService(CrawlingService);
                     }
                     else {
