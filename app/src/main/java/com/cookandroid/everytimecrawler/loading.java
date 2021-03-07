@@ -19,7 +19,7 @@ public class loading extends MainActivity {
     ImageButton exitButton, preButton;
     boolean isPaused = false;
 
-    ServiceControlDatabase sdb;
+    ServiceControlDatabase sdb = ServiceControlDatabase.getInstance(this);;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,14 @@ public class loading extends MainActivity {
                     if(!isPaused) {
                         loadingImage.clearAnimation();
                         // ON -> OFF
-                        offData();
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                offData();
+                            }
+                        }).start();
+
 //                        stopService(CrawlingService);
                     }
                     else {

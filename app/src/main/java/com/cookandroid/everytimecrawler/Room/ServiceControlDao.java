@@ -7,7 +7,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Dao
@@ -30,4 +29,10 @@ public interface ServiceControlDao {
 
     @Query("SELECT * FROM controlTable ORDER BY id LIMIT 1")
     LiveData<ServiceControlEntity> loadlastTask();
+
+    @Query("SELECT title FROM controlTable")
+    String showTitle();
+
+    @Query("SELECT des FROM controlTable")
+    String showDES();
 }

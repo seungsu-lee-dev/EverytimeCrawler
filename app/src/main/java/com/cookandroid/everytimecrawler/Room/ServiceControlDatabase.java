@@ -2,12 +2,22 @@ package com.cookandroid.everytimecrawler.Room;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {ServiceControlEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {ServiceControlEntity.class}, version = 2, exportSchema = false)
 public abstract class ServiceControlDatabase extends RoomDatabase {
+
+    static final Migration MIGRATION_2_3 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+
+        }
+    };
 
     public abstract ServiceControlDao ServiceControlDao();
     private static ServiceControlDatabase instance = null;
@@ -23,8 +33,9 @@ public abstract class ServiceControlDatabase extends RoomDatabase {
     public static synchronized ServiceControlDatabase getInstance(Context context){
         if(instance == null){
             instance =  Room.databaseBuilder(context.getApplicationContext(),
-                    ServiceControlDatabase.class, "control_Database")
-                    .createFromAsset("database/control_Database")
+                    ServiceControlDatabase.class, "control_Database.db")
+                    .createFromAsset("database/control_Database.db")
+                    .addMigrations(MIGRATION_2_3)
                     .build();
         }
         return instance;

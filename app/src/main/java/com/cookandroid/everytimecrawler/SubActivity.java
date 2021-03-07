@@ -230,20 +230,35 @@ public class SubActivity extends AppCompatActivity {
 //                            break;
 //                        }
 //                    }
-                    String t = SC.getTitle();
-                    if(t == "check") {
-                        // table title이 check이면
-                        android.util.Log.i("title은 check", "Information message");
-                        String des = SC.getDes();
-                        if(des == "OFF") {
-                            android.util.Log.i("des는 OFF", "Information message");
-                            SC.setDes("ON");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //checks = sdb.ServiceControlDao().getAll();
+                            //int size = checks.size();
+                            //for( int i = 0; i < size; i++) {
+                            //    checks.get(i);
+                            //    System.out.println(checks);
+                            //}
+
+                            //String t = SC.getTitle();
+                            String t = sdb.ServiceControlDao().showTitle();
+                            if(t.equals("check")) {
+                                // table title이 check이면
+                                android.util.Log.i("title은 check", "Information message");
+                                //String des = SC.getDes();
+                                String d = sdb.ServiceControlDao().showDES();
+                                if(d.equals("OFF")) {
+                                    android.util.Log.i("des는 OFF", "Information message");
+                                    //SC.setDes("ON");
+                                    onData();
+                                }
+                                android.util.Log.i("des는 ON", "Information message");
+                            } else {
+                                System.out.println(t);
+                                android.util.Log.i("controlTable 가져오기 오류", "Information message");
+                            }
                         }
-                        android.util.Log.i("des는 ON", "Information message");
-                        break;
-                    } else {
-                        android.util.Log.i("controlTable 가져오기 오류", "Information message");
-                    }
+                    }).start();
                     break;
 
                 case R.id.btnimg:

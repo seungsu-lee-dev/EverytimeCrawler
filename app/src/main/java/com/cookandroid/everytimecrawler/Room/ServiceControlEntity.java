@@ -7,8 +7,6 @@ import android.os.Parcelable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.ArrayList;
-
 @Entity(tableName = "controlTable")
 public class ServiceControlEntity implements Parcelable {
 
@@ -64,5 +62,14 @@ public class ServiceControlEntity implements Parcelable {
         dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(des);
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceControlEntity{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", des='" + des + '\'' +
+                '}';
     }
 }

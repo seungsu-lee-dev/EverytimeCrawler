@@ -3,6 +3,7 @@ package com.cookandroid.everytimecrawler;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -12,12 +13,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
+import com.cookandroid.everytimecrawler.Room.ServiceControlEntity;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +39,24 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
+
+        // assets/database/control_Database 접근이 가능한가?
+        // ==> Room DB 사용하려면 스레드 사용해야 됨
+        // 접근이 가능하다면 데이터를 넣거나 빼는게 가능한가?
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String c = "check";
+                String c1 = "ON";
+                ServiceControlEntity SC = new ServiceControlEntity(c, c1);
+                ServiceControlDatabase sdb = ServiceControlDatabase.getInstance(MainActivity.this);
+                //sdb.ServiceControlDao().insert(SC);
+                List<ServiceControlEntity> list = sdb.ServiceControlDao().getAll();
+                Log.e("List", list.toString());
+
+
+            }
+        }).start();
 
         login_id = (EditText) findViewById(R.id.login_id);
         login_password = (EditText) findViewById(R.id.login_password);
