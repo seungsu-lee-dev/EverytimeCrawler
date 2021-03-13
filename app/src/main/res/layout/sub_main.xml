@@ -93,7 +93,7 @@
             android:clickable="true"
             android:onClick="mOnClick"
             android:layout_weight="1"
-            android:src="@drawable/alldelete1" />
+            android:src="@drawable/deletev10" />
 
     </LinearLayout>
     //====================================================================
@@ -129,7 +129,7 @@
             android:clickable="true"
             android:onClick="btnSetting"
             android:layout_weight="1"
-            android:src="@drawable/setting1" />
+            android:src="@drawable/trashv1" />
 
     </LinearLayout>
 

@@ -33,6 +33,27 @@ public interface ServiceControlDao {
     @Query("SELECT title FROM controlTable")
     String showTitle();
 
-    @Query("SELECT des FROM controlTable")
-    String showDES();
+    @Query("SELECT des FROM controlTable WHERE title = 'check'")
+    String showDes();
+
+    @Query("SELECT des FROM controlTable WHERE title = 'loginstate'")
+    String showLoginstate();
+
+    @Query("SELECT id FROM controlTable WHERE title = 'check'")
+    int showId();
+
+    @Query("SELECT loginId FROM controlTable WHERE title = 'check'")
+    String showLoginId();
+
+    @Query("SELECT loginPw FROM controlTable WHERE title = 'check'")
+    String showLoginPw();
+
+    @Query("SELECT cookie_key FROM controlTable WHERE title = 'check'")
+    String showCookie_key();
+
+    @Query("SELECT cookie_value FROM controlTable WHERE title = 'check'")
+    String showCookie_value();
+
+    @Query("SELECT userAgent FROM controlTable WHERE title = 'check'")
+    String showUserAgent();
 }

@@ -205,60 +205,62 @@ public class SubActivity extends AppCompatActivity {
                     break;
 
                 case R.id.btnSetting:
-//                    createData();
-//                    returnTrueFalse();
-//                    modifyData();
-//                    returnTrueFalse();
-//                    String t = SC.getTitle();
-//                    System.out.println(t);
-//                    deleteData();
-//                    sdbTask = sdb.ServiceControlDao().loadlastTask();
-//                    List<ServiceControlEntity> list = sdb.ServiceControlDao().getAll();
-//                    if(list == null) {
-//                    if(sdbTask.getValue() == null) {
-////                    if(sdb == null) {
-//                        // table is empty
-//                        android.util.Log.i("테이블이 비어있음", "Information message");
-//                        createData();
-//                    } else {
-//                        // table is not empty
-//                        String des = SC.getDes();
-//                        // OFF이면 ON으로 변경
-//                        if(des == "OFF") {
-//                            SC.setDes("ON");
-////                            onData();
-//                            break;
+////                    createData();
+////                    returnTrueFalse();
+////                    modifyData();
+////                    returnTrueFalse();
+////                    String t = SC.getTitle();
+////                    System.out.println(t);
+////                    deleteData();
+////                    sdbTask = sdb.ServiceControlDao().loadlastTask();
+////                    List<ServiceControlEntity> list = sdb.ServiceControlDao().getAll();
+////                    if(list == null) {
+////                    if(sdbTask.getValue() == null) {
+//////                    if(sdb == null) {
+////                        // table is empty
+////                        android.util.Log.i("테이블이 비어있음", "Information message");
+////                        createData();
+////                    } else {
+////                        // table is not empty
+////                        String des = SC.getDes();
+////                        // OFF이면 ON으로 변경
+////                        if(des == "OFF") {
+////                            SC.setDes("ON");
+//////                            onData();
+////                            break;
+////                        }
+////                    }
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //checks = sdb.ServiceControlDao().getAll();
+//                            //int size = checks.size();
+//                            //for( int i = 0; i < size; i++) {
+//                            //    checks.get(i);
+//                            //    System.out.println(checks);
+//                            //}
+//
+//                            //String t = SC.getTitle();
+//                            String t = sdb.ServiceControlDao().showTitle();
+//                            if(t.equals("check")) {
+//                                // table title이 check이면
+//                                android.util.Log.i("title은 check", "Information message");
+//                                //String des = SC.getDes();
+//                                String d = sdb.ServiceControlDao().showDes();
+//                                if(d.equals("OFF")) {
+//                                    android.util.Log.i("des는 OFF", "Information message");
+//                                    //SC.setDes("ON");
+//                                    onData();
+//                                }
+//                                android.util.Log.i("des는 ON", "Information message");
+//                            } else {
+//                                System.out.println(t);
+//                                android.util.Log.i("controlTable 가져오기 오류", "Information message");
+//                            }
 //                        }
-//                    }
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //checks = sdb.ServiceControlDao().getAll();
-                            //int size = checks.size();
-                            //for( int i = 0; i < size; i++) {
-                            //    checks.get(i);
-                            //    System.out.println(checks);
-                            //}
-
-                            //String t = SC.getTitle();
-                            String t = sdb.ServiceControlDao().showTitle();
-                            if(t.equals("check")) {
-                                // table title이 check이면
-                                android.util.Log.i("title은 check", "Information message");
-                                //String des = SC.getDes();
-                                String d = sdb.ServiceControlDao().showDES();
-                                if(d.equals("OFF")) {
-                                    android.util.Log.i("des는 OFF", "Information message");
-                                    //SC.setDes("ON");
-                                    onData();
-                                }
-                                android.util.Log.i("des는 ON", "Information message");
-                            } else {
-                                System.out.println(t);
-                                android.util.Log.i("controlTable 가져오기 오류", "Information message");
-                            }
-                        }
-                    }).start();
+//                    }).start();
+                    Items.clear();
+                    Adapter.notifyDataSetChanged();
                     break;
 
                 case R.id.btnimg:

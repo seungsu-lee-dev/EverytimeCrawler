@@ -13,18 +13,34 @@ public class ServiceControlEntity implements Parcelable {
     //Room에서 자동으로 id를 할당
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private  String title;
-    private  String des;
+    private String title;
+    private String des;
+    private String loginId;
+    private String loginPw;
+    private String cookie_key;
+    private String cookie_value;
+    private String userAgent;
+
 
     public ServiceControlEntity(String title, String des) {
         this.title = title;
         this.des = des;
+        this.loginId = loginId;
+        this.loginPw = loginPw;
+        this.cookie_key = cookie_key;
+        this.cookie_value = cookie_value;
+        this.userAgent = userAgent;
     }
 
     protected ServiceControlEntity(Parcel in) {
         id = in.readInt();
         title = in.readString();
         des = in.readString();
+        loginId = in.readString();
+        loginPw = in.readString();
+        cookie_key = in.readString();
+        cookie_value = in.readString();
+        userAgent = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -49,7 +65,27 @@ public class ServiceControlEntity implements Parcelable {
 
     public String getTitle(){return title;}
 
-    public void setTitle() {this.title = title;}
+    public void setTitle(String title) {this.title = title;}
+
+    public String getLoginId() { return loginId;}
+
+    public void setLoginId(String loginId) { this.loginId = loginId;}
+
+    public String getLoginPw() { return loginPw;}
+
+    public void setLoginPw(String loginPw) { this.loginPw = loginPw;}
+
+    public String getCookie_key() { return cookie_key;}
+
+    public void setCookie_key(String cookie_key) { this.cookie_key = cookie_key;}
+
+    public String getCookie_value() { return cookie_value;}
+
+    public void setCookie_value(String cookie_value) { this.cookie_value = cookie_value;}
+
+    public String getUserAgent() { return userAgent;}
+
+    public void setUserAgent(String userAgent) { this.userAgent = userAgent;}
 
     @Override
     public int describeContents() {
@@ -62,6 +98,11 @@ public class ServiceControlEntity implements Parcelable {
         dest.writeInt(id);
         dest.writeString(title);
         dest.writeString(des);
+        dest.writeString(loginId);
+        dest.writeString(loginPw);
+        dest.writeString(cookie_key);
+        dest.writeString(cookie_value);
+        dest.writeString(userAgent);
     }
 
     @Override
@@ -70,6 +111,11 @@ public class ServiceControlEntity implements Parcelable {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", des='" + des + '\'' +
+                ", loginId='" + loginId + '\'' +
+                ", loginPw='" + loginPw + '\'' +
+                ", cookie_key='" + cookie_key + '\'' +
+                ", cookie_value='" + cookie_value + '\'' +
+                ", userAgent='" + userAgent + '\'' +
                 '}';
     }
 }
