@@ -6,10 +6,13 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 
+import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
 import com.cookandroid.everytimecrawler.Room.ServiceControlEntity;
 
 public class CrawlingService extends Service {
     ServiceControlEntity SC;
+    ServiceControlDatabase sdb = ServiceControlDatabase.getInstance(this);
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -25,11 +28,24 @@ public class CrawlingService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         android.util.Log.e("CrawlingService","onStartCommand");
-        String des = SC.getDes();
-        // OFF이면 스스로 서비스 종료(
-        if(des == "OFF") {
-            stopSelf();
-        }
+        //String des = SC.getDes();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String d = sdb.ServiceControlDao().showDes();
+                // OFF이면 스스로 서비스 종료(
+                if(d == "OFF") {
+                    stopSelf();
+                }
+
+
+
+            }
+        }).start();
+
+
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -38,4 +54,24 @@ public class CrawlingService extends Service {
         android.util.Log.e("CrawlingService","onDestroy");
         super.onDestroy();
     }
+
+//    private void loginData(String loginId, String loginPw, String cookie_key, String cookie_value, String userAgent) {
+//        int temp_id = sdb.ServiceControlDao().showId();
+//        System.out.println("temp_id는 " + temp_id);
+//
+//        String temp_title = sdb.ServiceControlDao().showTitle();
+//        String temp_des = sdb.ServiceControlDao().showDes();
+//
+//        ServiceControlEntity SC = new ServiceControlEntity(temp_title, temp_des);
+//
+//        SC.setId(temp_id);
+//        SC.setLoginId(loginId);
+//        SC.setLoginPw(loginPw);
+//        SC.setCookie_key(cookie_key);
+//        SC.setCookie_value(cookie_value);
+//        SC.setUserAgent(userAgent);
+//
+//        sdb.ServiceControlDao().update(SC);
+//        System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + loginId + ", loginPw는 " + loginPw + ", cookie_key는 " + cookie_key + ", cookie_value는 " + cookie_value + ", userAgent는 " + userAgent);
+//    }
 }
