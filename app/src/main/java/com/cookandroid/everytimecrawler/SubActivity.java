@@ -1,8 +1,14 @@
 package com.cookandroid.everytimecrawler;
 
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
@@ -13,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LiveData;
 import androidx.room.Room;
 
@@ -34,16 +41,23 @@ public class SubActivity extends AppCompatActivity {
     ArrayList<String> Items;
     ArrayAdapter<String> Adapter;
     ListView listView;
-    ImageButton btnAdd, btnDel, btnSave, btnSetting, btnLoad, btnRun;
+    ImageButton btnAdd, btnDel, btnSave, btnSetting, btnLoad, btnRun, btnLogout;
     EditText editText;
     Intent intent;
     Intent intent1;
     Intent intent2;
+    Intent intent3;
+    Intent intent4;
     Button btnImg;
     private String detail;
     private List<ServiceControlEntity> checks;
     ServiceControlEntity SC;
     LiveData<ServiceControlEntity> sdbTask;
+    String packageName = "com.everytime.v2";
+    NotificationManager manager;
+    NotificationCompat.Builder builder;
+    private static String CHANNEL_ID = "channel1";
+    private static String CHANEL_NAME = "Channel1";
 
     //---------------------------------------------------------------------
     @Override // main같은 역할 / 클래스마다 다 필요 / 레이아수 생성,초기화 컴포넌트를 불러오는 역할
@@ -91,6 +105,7 @@ public class SubActivity extends AppCompatActivity {
         btnRun = (ImageButton) findViewById(R.id.btnRun);
         btnImg = (Button) findViewById(R.id.btnimg);
         btnSetting = (ImageButton) findViewById(R.id.btnSetting);
+        btnLogout = (ImageButton) findViewById(R.id.btnlogout);
 
         btnAdd.setOnClickListener(listener);
         btnDel.setOnClickListener(listener);
@@ -100,6 +115,7 @@ public class SubActivity extends AppCompatActivity {
         btnImg.setOnClickListener(listener);
         btnSetting.setOnClickListener(listener);
         btnSave.setOnClickListener(listener);
+        btnLogout.setOnClickListener(listener);
 
     }
 
@@ -189,6 +205,51 @@ public class SubActivity extends AppCompatActivity {
 //        else {
 //            return false;
 //        }
+    }
+
+    private void logout() {
+        int temp_id = sdb.ServiceControlDao().showId();
+        System.out.println("temp_id는 " + temp_id);
+
+        String temp_title = sdb.ServiceControlDao().showTitle();
+        String temp_des = sdb.ServiceControlDao().showDes();
+
+        ServiceControlEntity SC = new ServiceControlEntity(temp_title, temp_des);
+
+        SC.setId(temp_id);
+        SC.setLoginId("1");
+        SC.setLoginPw("1");
+        SC.setCookie_key("1");
+        SC.setCookie_value("1");
+        SC.setUserAgent("1");
+
+        sdb.ServiceControlDao().update(SC);
+    }
+
+    private void onoffData(String state) {
+        int temp_id = sdb.ServiceControlDao().showId();
+        System.out.println("temp_id는 " + temp_id);
+        String c = "check";
+        ServiceControlEntity SC = new ServiceControlEntity(c, state);
+        SC.setId(temp_id);
+
+        String temp_loginId = sdb.ServiceControlDao().showLoginId();
+        SC.setLoginId(temp_loginId);
+
+        String temp_loginPw = sdb.ServiceControlDao().showLoginPw();
+        SC.setLoginPw(temp_loginPw);
+
+        String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
+        SC.setCookie_key(temp_cookie_key);
+
+        String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
+        SC.setCookie_value(temp_cookie_value);
+
+        String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
+        SC.setUserAgent(temp_userAgent);
+
+        sdb.ServiceControlDao().update(SC);
+        System.out.println("c는 " + c + ", newc1은 " + state + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
     }
 
     private void deleteData() {
@@ -304,10 +365,52 @@ public class SubActivity extends AppCompatActivity {
                     android.util.Log.i("크롤링 인텐트로 넘어감", "Information message");
                     intent2 = new Intent(getApplicationContext(), loading.class);
                     startActivity(intent2);
+                    push();
+                    break;
+
+                case R.id.btnlogout:
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            logout();
+                            onoffData("OFF");
+                        }
+                    }).start();
+
+                    intent4 = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent4);
+                    finish();
                     break;
             }
         }
     };
+
+    //---------------------------------------- 상단바 알림 -------------------------------------------------------
+    private void push(){
+        builder = null;
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            manager.createNotificationChannel( new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_DEFAULT) );
+            builder = new NotificationCompat.Builder(this,CHANNEL_ID);
+        }
+        else{
+            builder = new NotificationCompat.Builder(this);
+        }
+
+        intent3 = this.getPackageManager().getLaunchIntentForPackage(packageName);
+        intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent3,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentTitle("알림");
+        builder.setContentText("알림 메시지");
+        builder.setSmallIcon(R.drawable.ic_launcher_background);
+        builder.setAutoCancel(true);
+        builder.setContentIntent(pendingIntent);
+
+        Notification notification = builder.build();
+        manager.notify(1,notification);
+    }
 
     //------------------------< enum 부분 >-----------------------------------------
     enum PopupGravity {

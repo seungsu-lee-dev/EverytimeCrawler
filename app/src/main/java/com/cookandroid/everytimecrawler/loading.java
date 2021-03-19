@@ -2,6 +2,7 @@ package com.cookandroid.everytimecrawler;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -10,14 +11,18 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
 import com.cookandroid.everytimecrawler.Room.ServiceControlEntity;
 
-public class loading extends MainActivity {
+public class loading extends AppCompatActivity {
     private ImageView loadingImage;
     private Animation anim;
     ImageButton exitButton, preButton;
     boolean isPaused = false;
+    Intent intent;
+    Intent intent2;
 
     ServiceControlDatabase sdb = ServiceControlDatabase.getInstance(this);
 
@@ -59,23 +64,18 @@ public class loading extends MainActivity {
         SC.setId(temp_id);
 
         String temp_loginId = sdb.ServiceControlDao().showLoginId();
-        System.out.println("temp_loginId는 " + temp_loginId);
         SC.setLoginId(temp_loginId);
 
         String temp_loginPw = sdb.ServiceControlDao().showLoginPw();
-        System.out.println("temp_loginPw는 " + temp_loginPw);
         SC.setLoginPw(temp_loginPw);
 
         String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
-        System.out.println("temp_cookie_key는 " + temp_cookie_key);
         SC.setCookie_key(temp_cookie_key);
 
         String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
-        System.out.println("temp_cookie_value는 " + temp_cookie_value);
         SC.setCookie_value(temp_cookie_value);
 
         String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
-        System.out.println("temp_userAgent는 " + temp_userAgent);
         SC.setUserAgent(temp_userAgent);
 
         sdb.ServiceControlDao().update(SC);
@@ -110,12 +110,27 @@ public class loading extends MainActivity {
                                 onoffData("ON");
                             }
                         }).start();
+                        intent = new Intent(getApplicationContext(), CrawlingService.class);
+                        startService(intent);
                     }
                     isPaused = !isPaused;
                     break;
 
                 case R.id.preButton:
-                    finish();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String d = sdb.ServiceControlDao().showDes();
+                            Log.e("showDes", d);
+//                             ON이면 loading 액티비티로 화면전환(
+                            if (d.equals("ON")) {
+                                intent2 = new Intent(getApplicationContext(), SubActivity.class);
+                                startActivity(intent2);
+                            }
+                           finish();
+                        }
+                    }).start();
+
                     break;
 
                 case R.id.exitButton:
@@ -125,5 +140,24 @@ public class loading extends MainActivity {
             }
         }
     };
+
+    @Override
+    public void onBackPressed() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String d = sdb.ServiceControlDao().showDes();
+                Log.e("showDes", d);
+//                             ON이면 loading 액티비티로 화면전환(
+                if (d.equals("ON")) {
+                    intent2 = new Intent(getApplicationContext(), SubActivity.class);
+                    startActivity(intent2);
+                }
+                finish();
+            }
+        }).start();
+//        super.onBackPressed();
+    }
+
 }
 
