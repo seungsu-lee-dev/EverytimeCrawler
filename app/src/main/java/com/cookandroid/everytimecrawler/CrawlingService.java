@@ -2,7 +2,9 @@ package com.cookandroid.everytimecrawler;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -30,21 +32,29 @@ public class CrawlingService extends Service {
         android.util.Log.e("CrawlingService","onStartCommand");
         //String des = SC.getDes();
 
-        new Thread(new Runnable() {
+        Handler delayHandler = new Handler();
+        delayHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                String d = sdb.ServiceControlDao().showDes();
-                // OFF이면 스스로 서비스 종료(
-                if(d == "OFF") {
-                    stopSelf();
-                }
-
-
-
+                //여기에 딜레이 후 시작할 작업들을 입력
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean key = true;
+                        while(key) {
+                            String d = sdb.ServiceControlDao().showDes();
+//                    Log.e("showDes",d);
+                            // OFF이면 스스로 서비스 종료(
+                            if (d.equals("OFF")) {
+                                key = false;
+                                stopSelf();
+                            }
+                        }
+//                stopSelf();
+                    }
+                }).start();
             }
-        }).start();
-
-
+        }, 1000); // 3초 지연을 준 후 시작
 
         return super.onStartCommand(intent, flags, startId);
     }

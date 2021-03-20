@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
@@ -25,16 +26,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.DialogInterface;
+
 public class MainActivity extends AppCompatActivity {
     EditText login_id, login_password;
     String sId, sPw;
     Intent intent;
+    Intent intent2;
     ImageButton loginbutton;
     LoginThread thread;
     AutoLoginThread auto_thread;
+    JumpLoadingThread jump_thread;
     Button dot;
     ServiceControlDatabase sdb;
-    boolean auto_state;
+    static boolean auto_state;
+    static boolean loadingJump;
+    static boolean login_state;
+    static boolean testLogin_state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,56 +52,97 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         sdb = ServiceControlDatabase.getInstance(MainActivity.this);
         auto_state = false;
+        loadingJump = false;
+        login_state = false;
+        testLogin_state = false;
 
         // assets/database/control_Database 접근이 가능한가?
         // ==> Room DB 사용하려면 스레드 사용해야 됨
         // 접근이 가능하다면 데이터를 넣거나 빼는게 가능한가?
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String c = "check";
-                String c1 = "OFF";
-                ServiceControlEntity SC = new ServiceControlEntity(c, c1);
-                sdb = ServiceControlDatabase.getInstance(MainActivity.this);
-                //sdb.ServiceControlDao().insert(SC);
-                List<ServiceControlEntity> list = sdb.ServiceControlDao().getAll();
-                Log.e("List", list.toString());
-
-            }
-        }).start();
-
-//        auto_thread = new AutoLoginThread();
-//        auto_thread.start();
-//        try {
-//            auto_thread.join();
-//        } catch (InterruptedException e) {
-////                    e.printStackTrace();
-//            android.util.Log.i("스레드 join 오류", "Information message");
-//        }
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                String c = "check";
+//                String c1 = "OFF";
+//                ServiceControlEntity SC = new ServiceControlEntity(c, c1);
+//                sdb = ServiceControlDatabase.getInstance(MainActivity.this);
+//                //sdb.ServiceControlDao().insert(SC);
+//                List<ServiceControlEntity> list = sdb.ServiceControlDao().getAll();
+//                Log.e("List", list.toString());
 //
-//        if(auto_state) {
-//            auto_state = false;
-//            intent = new Intent(getApplicationContext(), SubActivity.class);
-//            startActivity(intent);
-////            finish();
+//            }
+//        }).start();
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                String d = sdb.ServiceControlDao().showDes();
+//                Log.e("showDes", d);
+//                // ON이면 loading 액티비티로 화면전환(
+//                if (d.equals("ON")) {
+//                    loadingJump = true;
+//                    Log.e("loadingJump", String.valueOf(loadingJump));
+//                    intent2 = new Intent(getApplicationContext(), loading.class);
+//                    startActivity(intent2);
+//                }
+//            }
+//        }).start();
+
+//        if(loadingJump) {
+//            loadingJump = false;
+//            Log.e("loadingJump", String.valueOf(loadingJump));
+//            intent2 = new Intent(getApplicationContext(), loading.class);
+//            startActivity(intent2);
 //        }
+        jump_thread = new JumpLoadingThread();
+        jump_thread.start();
+        try {
+            jump_thread.join();
+            if(loadingJump) {
+                Log.e("loadingJump", String.valueOf(loadingJump));
+                intent2 = new Intent(getApplicationContext(), loading.class);
+                startActivity(intent2);
+                finish();
+            }
+            else {
+                auto_thread = new AutoLoginThread();
+                auto_thread.start();
+                try {
+                    auto_thread.join();
+                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+                    android.util.Log.i("스레드 join 오류", "Information message");
+                }
+            }
+
+            if (auto_state&&(!loadingJump)) {
+                auto_state = false;
+                intent = new Intent(getApplicationContext(), SubActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        } catch (InterruptedException e) {
+//            e.printStackTrace();
+            Log.i("점프 스레드 오류", "Information message");
+        }
 
         login_id = (EditText) findViewById(R.id.login_id);
         login_password = (EditText) findViewById(R.id.login_password);
 
         loginbutton = (ImageButton) findViewById(R.id.loginbutton);
         dot = (Button) findViewById(R.id.btndot);
-        dot.setOnClickListener(new View.OnClickListener(){
+        dot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(),Credits.class));
+                startActivity(new Intent(getApplicationContext(), Credits.class));
             }
         });
 
         loginbutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), SubActivity.class);
-                startActivity(intent);
+//                intent = new Intent(getApplicationContext(), SubActivity.class);
+//                startActivity(intent);
 
                 thread = new LoginThread();
                 thread.start();
@@ -102,6 +151,11 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
 //                    e.printStackTrace();
                     android.util.Log.i("스레드 join 오류", "Information message");
+                }
+                if(testLogin_state||login_state) {
+                    intent = new Intent(getApplicationContext(), SubActivity.class);
+                    startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -173,8 +227,7 @@ public class MainActivity extends AppCompatActivity {
             if (loc_test_text.contains("내 정보")) {
                 loginData(loc_loginId, loc_loginPw, cookie_key, cookie_value, loc_userAgent);
                 return true;
-            }
-            else {
+            } else {
                 return false;
             }
 
@@ -184,38 +237,61 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean testLogin(String loc_loginId, String loc_loginPw) {
+        if((loc_loginId.equals("admin"))&&(loc_loginPw.equals("admin"))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private class JumpLoadingThread extends Thread {
+        public JumpLoadingThread() {
+            // 초기화 작업
+        }
+        public void run() {
+            String d = sdb.ServiceControlDao().showDes();
+            Log.e("showDes", d);
+            // ON이면 loading 액티비티로 화면전환(
+            if (d.equals("ON")) {
+                loadingJump = true;
+            }
+        }
+    }
+
     private class AutoLoginThread extends Thread {
         public AutoLoginThread() {
             // 초기화 작업
         }
+
         public void run() {
             // 자동 로그인
-                int temp_id = sdb.ServiceControlDao().showId();
-                String temp_title = sdb.ServiceControlDao().showTitle();
-                String temp_des = sdb.ServiceControlDao().showDes();
-                String temp_loginId = sdb.ServiceControlDao().showLoginId();
-                String temp_loginPw = sdb.ServiceControlDao().showLoginPw();
-                String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
-                String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
-                String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
+            int temp_id = sdb.ServiceControlDao().showId();
+            String temp_title = sdb.ServiceControlDao().showTitle();
+            String temp_des = sdb.ServiceControlDao().showDes();
+            String temp_loginId = sdb.ServiceControlDao().showLoginId();
+            String temp_loginPw = sdb.ServiceControlDao().showLoginPw();
+            String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
+            String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
+            String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
 
-                System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
+            System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
 
 //                loginData(temp_loginId, temp_loginPw, temp_cookie_key, temp_cookie_value, temp_userAgent);
 
-                boolean TF = login(temp_loginId, temp_loginPw, temp_userAgent);
+            boolean TF = login(temp_loginId, temp_loginPw, temp_userAgent);
 
-                if (TF) {
-                    showToast("자동로그인되었습니다");
-                    auto_state = true;
+            if (TF) {
+                showToast("자동로그인되었습니다");
+                auto_state = true;
 
 //
 //                    intent = new Intent(getApplicationContext(), SubActivity.class);
 //                    startActivity(intent);
-                }
-                else {
-                    showToast("로그인해주세요");
-                }
+            } else {
+                showToast("로그인해주세요");
+            }
 
         }
     }
@@ -228,24 +304,34 @@ public class MainActivity extends AppCompatActivity {
             sPw = login_password.getText().toString();
         }
 
-        public void run(){
+        public void run() {
             // 로그인 페이지 접속
             // Window, Chrome의 User Agent.
-                String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
+            String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
 
+            boolean TF2 = testLogin(sId, sPw);
+
+            if (TF2) {
+                showToast("테스트 계정으로 접속합니다.");
+                testLogin_state = true;
+//                loginData("admin", "admin", "1", "1", "1");
+            }
+            else {
                 boolean TF = login(sId, sPw, userAgent);
 
                 if (TF) {
                     showToast("로그인되었습니다");
-                }
-                else {
+                    login_state = true;
+                } else {
                     showToast("로그인 정보가 올바르지 않습니다");
                 }
+            }
 
         }
     }
 
     final Handler mHandler = new Handler();
+
     void showToast(final CharSequence text) {
         mHandler.post(new Runnable() {
             @Override
@@ -253,6 +339,31 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setMessage("종료하시겠습니까?");
+
+        // "예" 버튼을 누르면 실행되는 리스너
+        alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "어플을 종료합니다.", Toast.LENGTH_SHORT).show();
+                finish(); // 현재 액티비티를 종료한다. (MainActivity에서 작동하기 때문에 애플리케이션을 종료한다.)
+            }
+        });
+        // "아니오" 버튼을 누르면 실행되는 리스너
+        alBuilder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return; // 아무런 작업도 하지 않고 돌아간다
+            }
+        });
+        alBuilder.setTitle("키워드 알람 어플 종료");
+        alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
     }
 
 }

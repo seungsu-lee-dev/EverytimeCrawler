@@ -8,6 +8,16 @@
 
     >
 
+    <ImageButton
+        android:id="@+id/btnlogout"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="right"
+        android:scaleType="centerCrop"
+        android:src="@drawable/logout"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        />
 
     <LinearLayout
         android:orientation="horizontal"
