@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
@@ -24,6 +25,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import android.content.DialogInterface;
 
 public class MainActivity extends AppCompatActivity {
     EditText login_id, login_password;
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     static boolean auto_state;
     static boolean loadingJump;
     static boolean login_state;
+    static boolean testLogin_state;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         auto_state = false;
         loadingJump = false;
         login_state = false;
+        testLogin_state = false;
 
         // assets/database/control_Database 접근이 가능한가?
         // ==> Room DB 사용하려면 스레드 사용해야 됨
@@ -136,8 +141,8 @@ public class MainActivity extends AppCompatActivity {
 
         loginbutton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                intent = new Intent(getApplicationContext(), SubActivity.class);
-                startActivity(intent);
+//                intent = new Intent(getApplicationContext(), SubActivity.class);
+//                startActivity(intent);
 
                 thread = new LoginThread();
                 thread.start();
@@ -147,8 +152,9 @@ public class MainActivity extends AppCompatActivity {
 //                    e.printStackTrace();
                     android.util.Log.i("스레드 join 오류", "Information message");
                 }
-
-                if(login_state) {
+                if(testLogin_state||login_state) {
+                    intent = new Intent(getApplicationContext(), SubActivity.class);
+                    startActivity(intent);
                     finish();
                 }
             }
@@ -231,6 +237,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private boolean testLogin(String loc_loginId, String loc_loginPw) {
+        if((loc_loginId.equals("admin"))&&(loc_loginPw.equals("admin"))) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     private class JumpLoadingThread extends Thread {
         public JumpLoadingThread() {
             // 초기화 작업
@@ -294,13 +309,22 @@ public class MainActivity extends AppCompatActivity {
             // Window, Chrome의 User Agent.
             String userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36";
 
-            boolean TF = login(sId, sPw, userAgent);
+            boolean TF2 = testLogin(sId, sPw);
 
-            if (TF) {
-                showToast("로그인되었습니다");
-                login_state = true;
-            } else {
-                showToast("로그인 정보가 올바르지 않습니다");
+            if (TF2) {
+                showToast("테스트 계정으로 접속합니다.");
+                testLogin_state = true;
+//                loginData("admin", "admin", "1", "1", "1");
+            }
+            else {
+                boolean TF = login(sId, sPw, userAgent);
+
+                if (TF) {
+                    showToast("로그인되었습니다");
+                    login_state = true;
+                } else {
+                    showToast("로그인 정보가 올바르지 않습니다");
+                }
             }
 
         }
@@ -315,6 +339,31 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, text, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        // AlertDialog 빌더를 이용해 종료시 발생시킬 창을 띄운다
+        AlertDialog.Builder alBuilder = new AlertDialog.Builder(this);
+        alBuilder.setMessage("종료하시겠습니까?");
+
+        // "예" 버튼을 누르면 실행되는 리스너
+        alBuilder.setPositiveButton("예", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "어플을 종료합니다.", Toast.LENGTH_SHORT).show();
+                finish(); // 현재 액티비티를 종료한다. (MainActivity에서 작동하기 때문에 애플리케이션을 종료한다.)
+            }
+        });
+        // "아니오" 버튼을 누르면 실행되는 리스너
+        alBuilder.setNegativeButton("아니오", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return; // 아무런 작업도 하지 않고 돌아간다
+            }
+        });
+        alBuilder.setTitle("키워드 알람 어플 종료");
+        alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
     }
 
 }
