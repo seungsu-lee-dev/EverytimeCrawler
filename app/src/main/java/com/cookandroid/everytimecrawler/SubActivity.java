@@ -59,6 +59,7 @@ public class SubActivity extends AppCompatActivity {
     NotificationCompat.Builder builder;
     private static String CHANNEL_ID = "channel1";
     private static String CHANEL_NAME = "Channel1";
+    AlertDialog alertDialog;
 
     //---------------------------------------------------------------------
     @Override // main같은 역할 / 클래스마다 다 필요 / 레이아수 생성,초기화 컴포넌트를 불러오는 역할
@@ -447,7 +448,16 @@ public class SubActivity extends AppCompatActivity {
             }
         });
         alBuilder.setTitle("키워드 알람 어플 종료");
-        alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+        alertDialog = alBuilder.create();
+        alertDialog.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 액티비티를 종료하기 전
+        if((alertDialog != null)&& (alertDialog.isShowing())) {
+            alertDialog.dismiss();
+        }
+    }
 }

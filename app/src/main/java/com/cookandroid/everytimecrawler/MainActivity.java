@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     static boolean loadingJump;
     static boolean login_state;
     static boolean testLogin_state;
+    AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -363,7 +364,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         alBuilder.setTitle("키워드 알람 어플 종료");
-        alBuilder.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
+        alertDialog = alBuilder.create();
+        alertDialog.show(); // AlertDialog.Bulider로 만든 AlertDialog를 보여준다.
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 액티비티를 종료하기 전
+        if((alertDialog != null)&& (alertDialog.isShowing())) {
+            alertDialog.dismiss();
+        }
+    }
 }
