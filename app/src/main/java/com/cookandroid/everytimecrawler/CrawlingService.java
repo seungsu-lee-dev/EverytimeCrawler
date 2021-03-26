@@ -24,6 +24,9 @@ import org.jsoup.parser.Parser;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
@@ -284,73 +287,139 @@ public class CrawlingService extends Service {
                 System.out.println(response.body());
 
                 String crawl_text = response.body();
-                String[] strArr = crawl_text.split(">");
 
+                crawl_text = crawl_text.substring(crawl_text.indexOf("<article"));
+                String[] strArr = crawl_text.split("\n");
+
+                String temp_s = "";
                 for(String s : strArr) {
-                    System.out.println(s);
+//            	   strArr[0] += s;
+                    temp_s += s;
                 }
 
-//                String loc_test_text = doc.text();
-//                System.out.println(loc_test_text);
+//               System.out.println(crawl_text);
+//               System.out.println(temp_s);
 
+                String[] strArr2 = temp_s.split("</article>|png\"/>");
 
-//                Connection.Response response = Jsoup.connect("https://api.everytime.kr/find/board/article/list")
-//                        .userAgent(temp_userAgent)
-//                        .timeout(3000)
-//                        .header("Origin", "https://everytime.kr")
-//                        .header("Referer", "https://everytime.kr/")
-//                        .header("Accept", "*/*")
-//                        .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-//                        .header("Accept-Encoding", "gzip, deflate, br")
-//                        .header("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")
-//                        .data(data)
-//                        .cookies(temp_loginCookie)
-//                        .method(Connection.Method.POST)
-//                        .execute();
+//             String[] strArr3 = new String[20];
+//             for(String s : strArr2) {
+////          	   if()
+////                 System.out.println(s);
+//            	 int i=0;
+//            	 strArr3[i] = s;
+//            	 System.out.println(strArr3[i]);
+//            	 i++;
+//             }
+                for(int i=0;i<20;i++) {
+                    System.out.println("strArr2["+i+"] = " + strArr2[i]);
+                }
 
+                SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
 
+                Calendar cal = Calendar.getInstance();
 
+//             String format_time = format.format (cal.getTime());
+//             System.out.println(format_time);
+//             String now_time = format_time.substring(0, 13);
+                String now_time = format.format (cal.getTime());
+                System.out.println(now_time);
+//             String past_time =
 
+                cal.add(Calendar.HOUR, -1);
+                String past_time = format.format(cal.getTime());
 
-//                String source;
-//                WebView webView = new WebView(CrawlingService.this);
-//                //WebView 자바스크립트 활성화
-//                webView.getSettings().setJavaScriptEnabled(true);
-//                // 자바스크립트인터페이스 연결
-//                // 이걸 통해 자바스크립트 내에서 자바함수에 접근할 수 있음.
-//                webView.addJavascriptInterface(new MyJavascriptInterface(), "Android");
-//                // 페이지가 모두 로드되었을 때, 작업 정의
-//                webView.setWebViewClient(new WebViewClient() {
-//                    @Override
-//                    public void onPageFinished(WebView view, String url) {
-//                        super.onPageFinished(view, url);
-//                        // 자바스크립트 인터페이스로 연결되어 있는 getHTML를 실행
-//                        // 자바스크립트 기본 메소드로 html 소스를 통째로 지정해서 인자로 넘김
-//                        view.loadUrl("javascript:window.Android.getHtml(document.getElementsByTagName('body')[0].innerHTML);");
-//                    }
-//                });
+                System.out.println(past_time);
+
+//           Pattern p = Pattern.compile("(?<=created_at=\").*.(?=\")");
+//           Matcher m = p.matcher(strArr2[0]);
 //
-//                CookieManager cookieManager = CookieManager.getInstance();
-//                cookieManager.setAcceptCookie(true);
-//                List<Cookie> cookies = SessionControl.cookies;
-//                cookieManager.removeAllCookie();
-//                if (cookies != null) {
-//                    for (Cookie cookie : cookies) {
-//                        String cookieString = cookie.getName() + "=" + cookie.getValue() + "; Domain=" + cookie.getDomain();
-//                        cookieManager.setCookie(cookie.getDomain(), cookieString);
-//
-//                    }
-//                }
-//
-//                //지정한 URL을 웹 뷰로 접근하기
-//                webView.loadUrl("https://everytime.kr/389368");
+//           boolean found = false;
+//           while(m.find()) {
+//        	   System.out.println(m.group().toString());
+//        	   found = true;
+//           }
+//           if (!found) {
+//        	    System.out.println("I didn't found the text");
+//        	}
 
+                // 게시글 번호
+                int listnum = 0;
 
-//                if (loc_test_text.contains("내 정보")) {
-//
-//                } else {
-//
-//                }
+                String timestr = "";
+                for(int i=0; i<20; i++) {
+                    timestr = substringBetween(strArr2[i], "created_at=\"", "\"");
+//            	System.out.println(timestr);
+//            	System.out.println(timestr.startsWith(now_time));
+
+                    Calendar calstr = CalendarFromString(timestr);
+                    // 글 작성시간이 1시간 내면 true 리턴
+//            	System.out.println(Boolean.toString(compareDate(past_time, now_time, timestr)));
+                    boolean betweentime = compareDate(past_time, now_time, timestr);
+
+                    // 1시간 내가 아니면 i를 저장하고 break;
+                    if(!betweentime) {
+                        listnum = i;
+                        System.out.println(listnum);
+                        break;
+                    }
+                }
+
+                // text가 80자 미만이면 true
+                boolean text_small;
+                String textstr = "";
+                String href = "";
+                String titlestr = "";
+
+                for(int i=0; i<20; i++) {
+                    textstr = substringBetween(strArr2[i], "text=\"", "\"");
+                    System.out.println(textstr);
+
+                    int textlength = textstr.length();
+                    if (textlength == 80) {
+                        text_small = false;
+                        System.out.println(i + "번째 text가 80자 이상");
+                        href = substringBetween(strArr2[i], "id=\"", "\"");
+                        String texturl = "https://everytime.kr/389368/v/" + href;
+
+                        Map<String, String> data3 = new HashMap<>();
+                        data3.put("id", href);
+                        data3.put("limit_number", "-1");
+                        data3.put("moiminfo", "true");
+                        Connection.Response response3 = Jsoup.connect("https://api.everytime.kr/find/board/comment/list")
+                                .userAgent(temp_userAgent)
+                                .timeout(3000)
+                                .header("Origin", "https://everytime.kr")
+                                .header("Referer", "https://everytime.kr/")
+                                .header("Accept", "*/*")
+                                .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                                .header("Accept-Encoding", "gzip, deflate, br")
+                                .header("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")
+                                .header("Connection", "keep-alive")
+                                .header("Content-Length", "39")
+                                .header("Host", "api.everytime.kr")
+                                .header("sec-ch-ua", "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"")
+                                .header("sec-ch-ua-mobile", "?0")
+                                .header("Sec-Fetch-Dest", "empty")
+                                .header("Sec-Fetch-Mode", "cors")
+                                .header("Sec-Fetch-Site", "same-site")
+                                .data(data3)
+                                .cookies(temp_loginCookie)
+                                .method(Connection.Method.POST)
+                                .execute();
+
+                        System.out.println("");
+
+                        textstr = response3.body();
+                        System.out.println(textstr);
+                        textstr = substringBetween(strArr2[i], "text=\"", "\"");
+                        System.out.println(textstr);
+                    }
+
+                    titlestr = substringBetween(strArr2[i], "title=\"", "\"");
+                    System.out.println(titlestr);
+                }
+
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -359,12 +428,54 @@ public class CrawlingService extends Service {
         }
     }
 
-//    public class MyJavascriptInterface {
-//        @JavascriptInterface
-//        public void getHtml(String html) {
-//            // 위 자바 스크립트가 호출되면 여기로 html이 반환됨
-//            source = html;
-//        }
-//    }
+    private static String substringBetween(String str, String open, String close) {
+        if (str == null || open == null || close == null) {
+            return null;
+        }
+        int start = str.indexOf(open);
+        if (start != -1) {
+            int end = str.indexOf(close, start + open.length());
+            if (end != -1) {
+                return str.substring(start + open.length(), end);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * yyyy-MM-dd HH:mm:ss 형태의 문자열을 캘린더 객체로 변환합니다.
+     * 만약 변환에 실패할 경우 오늘 날짜를 반환합니다.
+     *
+     * @param date 날짜를 나타내는 문자열
+     * @return 변환된 캘린더 객체
+     */
+    public static Calendar CalendarFromString(String date) {
+        Calendar cal = Calendar.getInstance();
+
+        try
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            cal.setTime(formatter.parse(date));
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
+        return cal;
+    }
+
+    private static Boolean compareDate(String strStart, String strEnd, String strValue) {
+
+        Calendar calStart = CalendarFromString(strStart);
+        Calendar calEnd = CalendarFromString(strEnd);
+        Calendar calValue = CalendarFromString(strValue);
+
+        Boolean bValid = false;
+        if (calStart.before (calValue) && calEnd.after(calValue)) {
+            bValid = true;
+        }
+
+        return bValid;
+    }
 
 }
