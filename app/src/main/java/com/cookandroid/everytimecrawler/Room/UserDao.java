@@ -26,4 +26,7 @@ public interface UserDao {
 
     @Query("DELETE FROM kTable")
     void  deleteAll();
+
+    @Query("SELECT des FROM kTable")
+    String[] showDes();
 }

@@ -2,6 +2,7 @@ package com.cookandroid.everytimecrawler;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -12,9 +13,12 @@ import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
+import com.cookandroid.everytimecrawler.Room.AppDatabase;
 import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
 import com.cookandroid.everytimecrawler.Room.ServiceControlEntity;
+import com.cookandroid.everytimecrawler.Room.User;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -26,8 +30,12 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,6 +47,7 @@ public class CrawlingService extends Service {
     CrawlingThread crawl_thread;
     static boolean isLive;
     static boolean isRun;
+    AppDatabase adb = AppDatabase.getInstance((CrawlingService.this));
 
     @Nullable
     @Override
@@ -198,6 +207,7 @@ public class CrawlingService extends Service {
             // 초기화 작업
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         public void run() {
             System.out.println("크롤링 스레드 진입");
             int temp_id = sdb.ServiceControlDao().showId();
@@ -284,7 +294,7 @@ public class CrawlingService extends Service {
                         .execute();
 
                 System.out.println("body출력");
-                System.out.println(response.body());
+//                System.out.println(response.body());
 
                 String crawl_text = response.body();
 
@@ -311,24 +321,18 @@ public class CrawlingService extends Service {
 //            	 System.out.println(strArr3[i]);
 //            	 i++;
 //             }
-                for(int i=0;i<20;i++) {
-                    System.out.println("strArr2["+i+"] = " + strArr2[i]);
-                }
-
-                SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
-
-                Calendar cal = Calendar.getInstance();
+//                for(int i=0;i<20;i++) {
+//                    System.out.println("strArr2["+i+"] = " + strArr2[i]);
+//                }
 
 //             String format_time = format.format (cal.getTime());
 //             System.out.println(format_time);
 //             String now_time = format_time.substring(0, 13);
-                String now_time = format.format (cal.getTime());
+                LocalDateTime now_time = LocalDateTime.now();
                 System.out.println(now_time);
 //             String past_time =
 
-                cal.add(Calendar.HOUR, -1);
-                String past_time = format.format(cal.getTime());
-
+                LocalDateTime past_time = now_time.minusHours(1);
                 System.out.println(past_time);
 
 //           Pattern p = Pattern.compile("(?<=created_at=\").*.(?=\")");
@@ -344,26 +348,44 @@ public class CrawlingService extends Service {
 //        	}
 
                 // 게시글 번호
-                int listnum = 0;
+                int listnum = -1;
 
                 String timestr = "";
                 for(int i=0; i<20; i++) {
                     timestr = substringBetween(strArr2[i], "created_at=\"", "\"");
+                    LocalDateTime time_value = LocalDateTime.parse(timestr, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 //            	System.out.println(timestr);
 //            	System.out.println(timestr.startsWith(now_time));
 
-                    Calendar calstr = CalendarFromString(timestr);
+//                    Calendar calstr = CalendarFromString(timestr);
                     // 글 작성시간이 1시간 내면 true 리턴
 //            	System.out.println(Boolean.toString(compareDate(past_time, now_time, timestr)));
-                    boolean betweentime = compareDate(past_time, now_time, timestr);
+                    boolean betweentime = compareDate(past_time, now_time, time_value);
 
                     // 1시간 내가 아니면 i를 저장하고 break;
                     if(!betweentime) {
                         listnum = i;
-                        System.out.println(listnum);
+                        System.out.println("게시물 번호: "+listnum);
                         break;
                     }
                 }
+
+//                List userArr = adb.userDao().showDes();
+//                List<User> users;
+                String[] users;
+                users = adb.userDao().showDes();
+                System.out.println("키워드");
+                System.out.println(users.length);
+                int userlength = users.length;
+//                System.out.println(users.get(0).getDes());
+//                System.out.println(users[0]);
+//                System.out.println(users[1]);
+                for(int i=0; i<users.length; i++) {
+                    users[i] = substringBetween(users[i],"[","]");
+                    System.out.println(users[i]);
+                }
+
+
 
                 // text가 80자 미만이면 true
                 boolean text_small;
@@ -371,11 +393,14 @@ public class CrawlingService extends Service {
                 String href = "";
                 String titlestr = "";
 
-                for(int i=0; i<20; i++) {
+                for(int i=0; i<(listnum+1); i++) {
+                    titlestr = substringBetween(strArr2[i], "title=\"", "\"");
+                    Log.d("제목", titlestr);
+
                     textstr = substringBetween(strArr2[i], "text=\"", "\"");
-                    System.out.println(textstr);
 
                     int textlength = textstr.length();
+                    String textstr2 = "";
                     if (textlength == 80) {
                         text_small = false;
                         System.out.println(i + "번째 text가 80자 이상");
@@ -396,7 +421,7 @@ public class CrawlingService extends Service {
                                 .header("Accept-Encoding", "gzip, deflate, br")
                                 .header("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")
                                 .header("Connection", "keep-alive")
-                                .header("Content-Length", "39")
+//                                .header("Content-Length", "39")
                                 .header("Host", "api.everytime.kr")
                                 .header("sec-ch-ua", "\"Google Chrome\";v=\"89\", \"Chromium\";v=\"89\", \";Not A Brand\";v=\"99\"")
                                 .header("sec-ch-ua-mobile", "?0")
@@ -410,18 +435,30 @@ public class CrawlingService extends Service {
 
                         System.out.println("");
 
-                        textstr = response3.body();
-                        System.out.println(textstr);
-                        textstr = substringBetween(strArr2[i], "text=\"", "\"");
-                        System.out.println(textstr);
-                    }
+                        textstr2 = response3.body();
+//                        System.out.println(textstr2);
 
-                    titlestr = substringBetween(strArr2[i], "title=\"", "\"");
-                    System.out.println(titlestr);
+                        textstr2 = textstr2.substring(textstr2.indexOf("<article"));
+                        String[] hrefArr = textstr2.split("\n");
+
+                        String temptemp_s = "";
+                        for(String s : hrefArr) {
+                            temptemp_s += s;
+                        }
+
+                        String[] hrefArr2 = temptemp_s.split("</article>|png\"/>");
+                        textstr2 = substringBetween(hrefArr2[0], "text=\"", "\"");
+                        Log.d("내용", textstr2);
+
+
+
+                        continue;
+                    }
+                    Log.d("내용", textstr);
                 }
 
 
-            } catch (IOException e) {
+            } catch (IOException | ParseException e) {
                 e.printStackTrace();
             }
 
@@ -442,36 +479,12 @@ public class CrawlingService extends Service {
         return null;
     }
 
-    /**
-     * yyyy-MM-dd HH:mm:ss 형태의 문자열을 캘린더 객체로 변환합니다.
-     * 만약 변환에 실패할 경우 오늘 날짜를 반환합니다.
-     *
-     * @param date 날짜를 나타내는 문자열
-     * @return 변환된 캘린더 객체
-     */
-    public static Calendar CalendarFromString(String date) {
-        Calendar cal = Calendar.getInstance();
 
-        try
-        {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            cal.setTime(formatter.parse(date));
-        }
-        catch(ParseException e)
-        {
-            e.printStackTrace();
-        }
-        return cal;
-    }
-
-    private static Boolean compareDate(String strStart, String strEnd, String strValue) {
-
-        Calendar calStart = CalendarFromString(strStart);
-        Calendar calEnd = CalendarFromString(strEnd);
-        Calendar calValue = CalendarFromString(strValue);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private static Boolean compareDate(LocalDateTime calStart, LocalDateTime calEnd, LocalDateTime calValue) throws ParseException {
 
         Boolean bValid = false;
-        if (calStart.before (calValue) && calEnd.after(calValue)) {
+        if (calStart.isBefore (calValue) && calEnd.isAfter(calValue)) {
             bValid = true;
         }
 
