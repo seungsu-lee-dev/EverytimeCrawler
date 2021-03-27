@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -53,6 +54,7 @@ public class CrawlingService extends Service {
     static boolean isLive;
     static boolean isRun;
     AppDatabase adb = AppDatabase.getInstance((CrawlingService.this));
+    newCookieThread cookie_thread;
 
     String packageName = "com.everytime.v2";
     NotificationManager manager;
@@ -71,6 +73,41 @@ public class CrawlingService extends Service {
     public void onCreate() {
         android.util.Log.e("CrawlingService", "onCreate");
         super.onCreate();
+
+        isLive = true;
+        Timer timer = new Timer(isLive);
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                isRun = true;
+                // 핸들러를 사용하여 딜레이 주기
+                // 1초 후부터 DB의 des 필드 체크하여 OFF면 자동으로 서비스 종료
+                delayHandler.post(new Runnable() {
+                    public void run() {
+                        //여기에 딜레이 후 시작할 작업들을 입력
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // isRun은 while문 무한루프 돌리기 위한 boolean 값
+//                                isRun = true;
+                                while (isRun) {
+                                    cookie_thread = new newCookieThread();
+                                    cookie_thread.start();
+                                    try {
+                                        cookie_thread.join();
+                                        isRun = false;
+                                    } catch (InterruptedException e) {
+                                        android.util.Log.i("크롤링 스레드 join 오류", "Information message");
+                                    }
+                                }
+                            }
+                        }).start();
+                    }
+                });
+            }
+        }, 0, 3000000); // 1초 지연을 준 후 50분마다 실행
+
     }
 
     @Override
@@ -412,6 +449,7 @@ public class CrawlingService extends Service {
                     textstr = substringBetween(strArr2[i], "text=\"", "\"");
 
                     href = substringBetween(strArr2[i], "id=\"", "\"");
+//                    texturl = "https://everytime.kr/389368/v/" + href;
                     texturl = "https://everytime.kr/389368/v/" + href;
 
                     int textlength = textstr.length();
@@ -476,9 +514,10 @@ public class CrawlingService extends Service {
                             Log.d("keyword[0]", keyword[0]);
                             Log.d("keyword[1]", keyword[1]);
 
-                            for(int k=0; k<keyword.length; k++) {
-                                keywordArr[j][k] = keyword[k];
-                            }
+                            keywordArr[j] = keyword;
+//                            for(int k=0; k<keyword.length; k++) {
+//                                keywordArr[j][k] = keyword[k];
+//                            }
 
                         }
 
@@ -491,9 +530,9 @@ public class CrawlingService extends Service {
                         }
 
                         if(contain) {
-//                            push(i);
                             System.out.println("장터게시판 키워드 알림: "+ i);
                             Log.d("게시판 url", texturl);
+                            push(texturl);
                             contain = !contain;
                         }
 
@@ -514,7 +553,7 @@ public class CrawlingService extends Service {
 
                         Log.d("keyword[0]", keyword[0]);
                         Log.d("keyword[1]", keyword[1]);
-                        keywordArr[j]=keyword;
+                        keywordArr[j] = keyword;
 //                        for(int k=0; k<keyword.length; k++) {
 //                            keywordArr[j][k] = keyword[k];
 //                        }
@@ -530,9 +569,9 @@ public class CrawlingService extends Service {
                     }
 
                     if(contain) {
-//                            push(i);
                         System.out.println("장터게시판 키워드 알림: "+ i);
                         Log.d("게시판 url", texturl);
+                        push(texturl);
                         contain = !contain;
                     }
 
@@ -547,7 +586,7 @@ public class CrawlingService extends Service {
     }
 
     //---------------------------------------- 상단바 알림 -------------------------------------------------------
-    private void push(){
+    private void push(String host){
         builder = null;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -559,8 +598,14 @@ public class CrawlingService extends Service {
             builder = new NotificationCompat.Builder(this);
         }
 
-        intent3 = this.getPackageManager().getLaunchIntentForPackage(packageName);
-        intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent3 = this.getPackageManager().getLaunchIntentForPackage(packageName);
+//        intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+//        String scheme = "everytime.v2://" + host;
+        String scheme = host;
+        Uri uri = Uri.parse(scheme);
+//        Intent intent3 = new Intent(Intent.ACTION_VIEW, uri);
+        Intent intent3 = new Intent(Intent.ACTION_VIEW, uri);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent3,PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentTitle("알림");
@@ -597,6 +642,77 @@ public class CrawlingService extends Service {
         }
 
         return bValid;
+    }
+
+    private class newCookieThread extends Thread {
+        public newCookieThread() {
+
+        }
+        public void run() {
+            try {
+                int temp_id = sdb.ServiceControlDao().showId();
+                System.out.println("temp_id는 " + temp_id);
+
+                String temp_title = sdb.ServiceControlDao().showTitle();
+                String temp_des = sdb.ServiceControlDao().showDes();
+
+                ServiceControlEntity SC = new ServiceControlEntity(temp_title, temp_des);
+
+                String temp_loginId = sdb.ServiceControlDao().showLoginId();
+                String temp_loginPw = sdb.ServiceControlDao().showLoginPw();
+                String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
+                String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
+                String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
+
+                SC.setId(temp_id);
+                SC.setLoginId(temp_loginId);
+                SC.setLoginPw(temp_loginPw);
+                SC.setUserAgent(temp_userAgent);
+
+                System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
+
+                // 전송할 폼 데이터
+                Map<String, String> data = new HashMap<>();
+                data.put("userid", temp_loginId);
+                data.put("password", temp_loginPw);
+                data.put("redirect", "/");
+
+                // 로그인(POST)
+                Connection.Response response = Jsoup.connect("https://everytime.kr/user/login")
+                        .userAgent(temp_userAgent)
+                        .timeout(3000)
+                        .header("Origin", "https://everytime.kr/")
+                        .header("Referer", "https://everytime.kr")
+                        .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+                        .header("Content-Type", "application/x-www-form-urlencoded")
+                        .header("Accept-Encoding", "gzip, deflate, br")
+                        .header("Accept-Language", "ko-KR,ko;q=0.9,en;q=0.8")
+                        .data(data)
+                        .method(Connection.Method.POST)
+                        .execute();
+
+                // 로그인 성공 후 얻은 쿠키.
+                Map<String, String> loginCookie = response.cookies();
+
+                System.out.println(loginCookie);
+                String cookie_key = "1", cookie_value = "1";
+
+                for (Map.Entry<String, String> entry : loginCookie.entrySet()) {
+                    System.out.println("key는 " + entry.getKey() + ", value는 " + entry.getValue());
+                    cookie_key = entry.getKey();
+                    cookie_value = entry.getValue();
+                }
+
+                SC.setCookie_key(cookie_key);
+                SC.setCookie_value(cookie_value);
+                sdb.ServiceControlDao().update(SC);
+
+                System.out.println("new cookie_key는 " + cookie_key + "new cookie_value는 " + cookie_value);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

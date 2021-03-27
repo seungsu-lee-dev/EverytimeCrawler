@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
             jump_thread.join();
             if(loadingJump) {
                 Log.e("loadingJump", String.valueOf(loadingJump));
-                intent2 = new Intent(getApplicationContext(), loading.class);
+                intent2 = new Intent(getApplicationContext(), SubActivity.class);
                 startActivity(intent2);
                 finish();
             }
