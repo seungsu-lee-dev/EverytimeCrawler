@@ -1,5 +1,9 @@
 package com.cookandroid.everytimecrawler;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Build;
@@ -14,6 +18,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 
 import com.cookandroid.everytimecrawler.Room.AppDatabase;
 import com.cookandroid.everytimecrawler.Room.ServiceControlDatabase;
@@ -48,6 +53,13 @@ public class CrawlingService extends Service {
     static boolean isLive;
     static boolean isRun;
     AppDatabase adb = AppDatabase.getInstance((CrawlingService.this));
+
+    String packageName = "com.everytime.v2";
+    NotificationManager manager;
+    NotificationCompat.Builder builder;
+    private static String CHANNEL_ID = "channel1";
+    private static String CHANEL_NAME = "Channel1";
+    Intent intent3;
 
     @Nullable
     @Override
@@ -385,13 +397,13 @@ public class CrawlingService extends Service {
                     System.out.println(users[i]);
                 }
 
-
-
                 // text가 80자 미만이면 true
                 boolean text_small;
                 String textstr = "";
                 String href = "";
                 String titlestr = "";
+                boolean contain = false;
+                String texturl = "";
 
                 for(int i=0; i<(listnum+1); i++) {
                     titlestr = substringBetween(strArr2[i], "title=\"", "\"");
@@ -399,14 +411,16 @@ public class CrawlingService extends Service {
 
                     textstr = substringBetween(strArr2[i], "text=\"", "\"");
 
+                    href = substringBetween(strArr2[i], "id=\"", "\"");
+                    texturl = "https://everytime.kr/389368/v/" + href;
+
                     int textlength = textstr.length();
                     String textstr2 = "";
                     if (textlength == 80) {
                         text_small = false;
                         System.out.println(i + "번째 text가 80자 이상");
-                        href = substringBetween(strArr2[i], "id=\"", "\"");
-                        String texturl = "https://everytime.kr/389368/v/" + href;
-
+//                        href = substringBetween(strArr2[i], "id=\"", "\"");
+//                        texturl = "https://everytime.kr/389368/v/" + href;
                         Map<String, String> data3 = new HashMap<>();
                         data3.put("id", href);
                         data3.put("limit_number", "-1");
@@ -450,11 +464,78 @@ public class CrawlingService extends Service {
                         textstr2 = substringBetween(hrefArr2[0], "text=\"", "\"");
                         Log.d("내용", textstr2);
 
+                        String[][] keywordArr = new String[userlength][];
 
+                        for(int j=0; j<userlength; j++) {
+                            String[] keyword = users[j].split(", ");
+
+//                            for(String k : keyword) {
+//                                System.out.println(k);
+//                            }
+
+                            Log.d("keyword[0]", keyword[0]);
+                            Log.d("keyword[1]", keyword[1]);
+
+                            for(int k=0; k<keyword.length; k++) {
+                                keywordArr[j][k] = keyword[k];
+                            }
+
+                        }
+
+                        for(int j=0; j<userlength; j++) {
+                            for(int k=0; k<keywordArr[j].length; k++) {
+                                if(titlestr.contains(keywordArr[j][k])||textstr.contains(keywordArr[j][k])) {
+                                    contain = true;
+                                }
+                            }
+                        }
+
+                        if(contain) {
+//                            push(i);
+                            System.out.println("장터게시판 키워드 알림: "+ i);
+                            Log.d("게시판 url", texturl);
+                            contain = !contain;
+                        }
+
+//                        textstr2.contains();
 
                         continue;
                     }
                     Log.d("내용", textstr);
+
+                    String[][] keywordArr = new String[userlength][];
+
+                    for(int j=0; j<userlength; j++) {
+                        String[] keyword = users[j].split(", ");
+
+//                            for(String k : keyword) {
+//                                System.out.println(k);
+//                            }
+
+                        Log.d("keyword[0]", keyword[0]);
+                        Log.d("keyword[1]", keyword[1]);
+                        keywordArr[j]=keyword;
+//                        for(int k=0; k<keyword.length; k++) {
+//                            keywordArr[j][k] = keyword[k];
+//                        }
+
+                    }
+
+                    for(int j=0; j<userlength; j++) {
+                        for(int k=0; k<keywordArr[j].length; k++) {
+                            if(titlestr.contains(keywordArr[j][k])||textstr.contains(keywordArr[j][k])) {
+                                contain = true;
+                            }
+                        }
+                    }
+
+                    if(contain) {
+//                            push(i);
+                        System.out.println("장터게시판 키워드 알림: "+ i);
+                        Log.d("게시판 url", texturl);
+                        contain = !contain;
+                    }
+
                 }
 
 
@@ -463,6 +544,33 @@ public class CrawlingService extends Service {
             }
 
         }
+    }
+
+    //---------------------------------------- 상단바 알림 -------------------------------------------------------
+    private void push(){
+        builder = null;
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            manager.createNotificationChannel( new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_DEFAULT) );
+            builder = new NotificationCompat.Builder(this,CHANNEL_ID);
+        }
+        else{
+            builder = new NotificationCompat.Builder(this);
+        }
+
+        intent3 = this.getPackageManager().getLaunchIntentForPackage(packageName);
+        intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent3,PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentTitle("알림");
+        builder.setContentText("알림 메시지");
+        builder.setSmallIcon(R.drawable.ic_launcher_background);
+        builder.setAutoCancel(true);
+        builder.setContentIntent(pendingIntent);
+
+        Notification notification = builder.build();
+        manager.notify(1,notification);
     }
 
     private static String substringBetween(String str, String open, String close) {
