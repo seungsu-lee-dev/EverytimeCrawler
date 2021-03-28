@@ -176,38 +176,38 @@ public class SubActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void createData() {
-        String c = "check";
-        String c1 = "ON";
-        ServiceControlEntity SC = new ServiceControlEntity(c, c1);
-        sdb.ServiceControlDao().insert(SC);
-    }
+//    private void createData() {
+//        String c = "check";
+//        String c1 = "ON";
+//        ServiceControlEntity SC = new ServiceControlEntity(c, c1);
+//        sdb.ServiceControlDao().insert(SC);
+//    }
+//
+//    private void offData() {
+//        String c = "check";
+//        String newc1 = "OFF";
+//        ServiceControlEntity SC = new ServiceControlEntity(c, newc1);
+//        sdb.ServiceControlDao().update(SC);
+//    }
+//
+//    private void onData() {
+//        String c = "check";
+//        String newc2 = "ON";
+//        ServiceControlEntity SC = new ServiceControlEntity(c, newc2);
+//        sdb.ServiceControlDao().update(SC);
+//    }
 
-    private void offData() {
-        String c = "check";
-        String newc1 = "OFF";
-        ServiceControlEntity SC = new ServiceControlEntity(c, newc1);
-        sdb.ServiceControlDao().update(SC);
-    }
-
-    private void onData() {
-        String c = "check";
-        String newc2 = "ON";
-        ServiceControlEntity SC = new ServiceControlEntity(c, newc2);
-        sdb.ServiceControlDao().update(SC);
-    }
-
-    //boolean
-    private void returnTrueFalse() {
-        checks = ServiceControlDatabase.getInstance(this).ServiceControlDao().getAll();
-        System.out.println(checks);
-//        if() {
-//            return true;
-//        }
-//        else {
-//            return false;
-//        }
-    }
+//    //boolean
+//    private void returnTrueFalse() {
+//        checks = ServiceControlDatabase.getInstance(this).ServiceControlDao().getAll();
+//        System.out.println(checks);
+////        if() {
+////            return true;
+////        }
+////        else {
+////            return false;
+////        }
+//    }
 
     private void logout() {
         int temp_id = sdb.ServiceControlDao().showId();
@@ -224,6 +224,9 @@ public class SubActivity extends AppCompatActivity {
         SC.setCookie_key("1");
         SC.setCookie_value("1");
         SC.setUserAgent("1");
+
+        String temp_listnum = sdb.ServiceControlDao().showListnum();
+        SC.setListnum(temp_listnum);
 
         sdb.ServiceControlDao().update(SC);
     }
@@ -250,8 +253,11 @@ public class SubActivity extends AppCompatActivity {
         String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
         SC.setUserAgent(temp_userAgent);
 
+        String temp_listnum = sdb.ServiceControlDao().showListnum();
+        SC.setListnum(temp_listnum);
+
         sdb.ServiceControlDao().update(SC);
-        System.out.println("c는 " + c + ", newc1은 " + state + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
+        System.out.println("c는 " + c + ", newc1은 " + state + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent + ", listnum은 " + temp_listnum);
     }
 
     private void deleteData() {

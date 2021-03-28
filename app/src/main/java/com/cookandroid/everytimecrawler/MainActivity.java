@@ -178,8 +178,11 @@ public class MainActivity extends AppCompatActivity {
         SC.setCookie_value(cookie_value);
         SC.setUserAgent(userAgent);
 
+        String temp_listnum = sdb.ServiceControlDao().showListnum();
+        SC.setListnum(temp_listnum);
+
         sdb.ServiceControlDao().update(SC);
-        System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + loginId + ", loginPw는 " + loginPw + ", cookie_key는 " + cookie_key + ", cookie_value는 " + cookie_value + ", userAgent는 " + userAgent);
+        System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + loginId + ", loginPw는 " + loginPw + ", cookie_key는 " + cookie_key + ", cookie_value는 " + cookie_value + ", userAgent는 " + userAgent + ", listnum은 " + temp_listnum);
     }
 
     private boolean login(String loc_loginId, String loc_loginPw, String loc_userAgent) {
@@ -276,10 +279,11 @@ public class MainActivity extends AppCompatActivity {
             String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
             String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
             String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
+            String temp_listnum = sdb.ServiceControlDao().showListnum();
 
-            System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
+            System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent + ", listnum은 " + temp_listnum);
 
-//                loginData(temp_loginId, temp_loginPw, temp_cookie_key, temp_cookie_value, temp_userAgent);
+//                loginData(temp_loginId, temp_loginPw, temp_cookie_key, temp_cookie_value, temp_userAgent, temp_listnum);
 
             boolean TF = login(temp_loginId, temp_loginPw, temp_userAgent);
 
