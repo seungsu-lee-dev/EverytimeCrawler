@@ -367,7 +367,7 @@ public class SubActivity extends AppCompatActivity {
                     android.util.Log.i("크롤링 인텐트로 넘어감", "Information message");
                     intent2 = new Intent(getApplicationContext(), loading.class);
                     startActivity(intent2);
-                    push();
+//                    push();
                     finish();
                     break;
 
