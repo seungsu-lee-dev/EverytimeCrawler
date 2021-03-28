@@ -361,6 +361,13 @@ public class SubActivity extends AppCompatActivity {
                     break;
 
                 case R.id.btnRun:
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onoffData("ON");
+                        }
+                    }).start();
+
                     intent1 = new Intent(getApplicationContext(), CrawlingService.class);
                     startService(intent1);
 //                    android.util.Log.i("크롤링 인텐트로 넘어감", "startService()");
