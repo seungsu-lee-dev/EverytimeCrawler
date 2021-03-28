@@ -51,8 +51,12 @@ public class CrawlingService extends Service {
     ServiceControlDatabase sdb = ServiceControlDatabase.getInstance(CrawlingService.this);
     Handler delayHandler = new Handler();
     CrawlingThread crawl_thread;
-    static boolean isLive;
-    static boolean isRun;
+    static boolean isLive = true;
+    static boolean isRun1 = true, isRun2 = true, isRun3 = true;
+//    static boolean Done = false;
+//    TimerTask ;
+    static Timer timer1 = new Timer(isLive);
+    static Timer timer2 = new Timer(isLive);
     AppDatabase adb = AppDatabase.getInstance((CrawlingService.this));
     newCookieThread cookie_thread;
 
@@ -74,13 +78,15 @@ public class CrawlingService extends Service {
         android.util.Log.e("CrawlingService", "onCreate");
         super.onCreate();
 
-        isLive = true;
-        Timer timer = new Timer(isLive);
+//        isLive = true;
+        timer1 = new Timer(isLive);
+//        isRun1 = true;
+        timer2 = new Timer(isLive);
 
-        timer.schedule(new TimerTask() {
+        timer1.schedule(new TimerTask() {
             @Override
             public void run() {
-                isRun = true;
+                isRun1 = true;
                 // 핸들러를 사용하여 딜레이 주기
                 // 1초 후부터 DB의 des 필드 체크하여 OFF면 자동으로 서비스 종료
                 delayHandler.post(new Runnable() {
@@ -91,22 +97,26 @@ public class CrawlingService extends Service {
                             public void run() {
                                 // isRun은 while문 무한루프 돌리기 위한 boolean 값
 //                                isRun = true;
-                                while (isRun) {
+                                while (isRun1) {
                                     cookie_thread = new newCookieThread();
                                     cookie_thread.start();
                                     try {
                                         cookie_thread.join();
-                                        isRun = false;
+                                        isRun1 = false;
                                     } catch (InterruptedException e) {
                                         android.util.Log.i("크롤링 스레드 join 오류", "Information message");
                                     }
+//                                    if(Done) {
+//                                        isRun1 = false;
+//                                        return;
+//                                    }
                                 }
                             }
                         }).start();
                     }
                 });
             }
-        }, 0, 3000000); // 1초 지연을 준 후 50분마다 실행
+        }, 0, 3000000); // 0초 지연을 준 후 50분마다 실행
 
     }
 
@@ -114,13 +124,14 @@ public class CrawlingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         android.util.Log.e("CrawlingService", "onStartCommand");
         //String des = SC.getDes();
-        isLive = true;
-        Timer timer = new Timer(isLive);
+//        isLive = true;
+//        Timer timer2 = new Timer(isLive);
+//        isRun2 = true;
 
-        timer.schedule(new TimerTask() {
+        timer2.schedule(new TimerTask() {
             @Override
             public void run() {
-                isRun = true;
+                isRun2 = true;
                 // 핸들러를 사용하여 딜레이 주기
                 // 1초 후부터 DB의 des 필드 체크하여 OFF면 자동으로 서비스 종료
                 delayHandler.post(new Runnable() {
@@ -131,14 +142,21 @@ public class CrawlingService extends Service {
                             public void run() {
                                 // isRun은 while문 무한루프 돌리기 위한 boolean 값
 //                                isRun = true;
-                                while (isRun) {
+                                while (isRun2) {
                                     String d = sdb.ServiceControlDao().showDes();
 //                    Log.e("showDes",d);
                                     // OFF이면 스스로 서비스 종료(
+                                    isRun2 = false;
                                     if (d.equals("OFF")) {
-                                        isRun = false;
+                                        isRun2 = false;
+                                        isLive = false;
                                         stopSelf();
+                                        return;
                                     }
+//                                    if(Done) {
+//                                        isRun2 = false;
+//                                        return;
+//                                    }
                                 }
 //                stopSelf();
                             }
@@ -208,10 +226,10 @@ public class CrawlingService extends Service {
 //            }
 //        }).start();
 
-        timer.schedule(new TimerTask() {
+        timer2.schedule(new TimerTask() {
             @Override
             public void run() {
-                isRun = true;
+                isRun3 = true;
                 delayHandler.post(new Runnable() {
                     public void run() {
                         //여기에 딜레이 후 시작할 작업들을 입력
@@ -220,15 +238,19 @@ public class CrawlingService extends Service {
                             public void run() {
                                 // isRun은 while문 무한루프 돌리기 위한 boolean 값
 //                                isRun = true;
-                                while (isRun) {
+                                while (isRun3) {
                                     crawl_thread = new CrawlingThread();
                                     crawl_thread.start();
                                     try {
                                         crawl_thread.join();
-                                        isRun = false;
+                                        isRun3 = false;
                                     } catch (InterruptedException e) {
                                         android.util.Log.i("크롤링 스레드 join 오류", "Information message");
                                     }
+//                                    if(Done) {
+//                                        isRun3 = false;
+//                                        return;
+//                                    }
                                 }
                             }
                         }).start();
@@ -244,7 +266,9 @@ public class CrawlingService extends Service {
     public void onDestroy() {
         android.util.Log.e("CrawlingService", "onDestroy");
         isLive = false;
-        isRun = false;
+        isRun1 = false; isRun2 = false; isRun3 = false;
+//        Done = true;
+        timer1.cancel(); timer2.cancel();
         super.onDestroy();
     }
 
@@ -511,8 +535,8 @@ public class CrawlingService extends Service {
 //                                System.out.println(k);
 //                            }
 
-                            Log.d("keyword[0]", keyword[0]);
-                            Log.d("keyword[1]", keyword[1]);
+//                            Log.d("keyword[0]", keyword[0]);
+//                            Log.d("keyword[1]", keyword[1]);
 
                             keywordArr[j] = keyword;
 //                            for(int k=0; k<keyword.length; k++) {
@@ -532,7 +556,7 @@ public class CrawlingService extends Service {
                         if(contain) {
                             System.out.println("장터게시판 키워드 알림: "+ i);
                             Log.d("게시판 url", texturl);
-                            push(texturl);
+                            push(texturl, titlestr);
                             contain = !contain;
                         }
 
@@ -551,8 +575,8 @@ public class CrawlingService extends Service {
 //                                System.out.println(k);
 //                            }
 
-                        Log.d("keyword[0]", keyword[0]);
-                        Log.d("keyword[1]", keyword[1]);
+//                        Log.d("keyword[0]", keyword[0]);
+//                        Log.d("keyword[1]", keyword[1]);
                         keywordArr[j] = keyword;
 //                        for(int k=0; k<keyword.length; k++) {
 //                            keywordArr[j][k] = keyword[k];
@@ -571,7 +595,7 @@ public class CrawlingService extends Service {
                     if(contain) {
                         System.out.println("장터게시판 키워드 알림: "+ i);
                         Log.d("게시판 url", texturl);
-                        push(texturl);
+                        push(texturl, titlestr);
                         contain = !contain;
                     }
 
@@ -586,7 +610,7 @@ public class CrawlingService extends Service {
     }
 
     //---------------------------------------- 상단바 알림 -------------------------------------------------------
-    private void push(String host){
+    private void push(String host, String title){
         builder = null;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -609,7 +633,8 @@ public class CrawlingService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent3,PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentTitle("알림");
-        builder.setContentText("알림 메시지");
+//        builder.setContentText("알림 메시지");
+        builder.setContentText(title);
         builder.setSmallIcon(R.drawable.ic_launcher_background);
         builder.setAutoCancel(true);
         builder.setContentIntent(pendingIntent);
