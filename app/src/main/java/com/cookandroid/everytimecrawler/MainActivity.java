@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (android.content.ActivityNotFoundException anfe) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.everytime.v2")));
             }
+            Toast.makeText(MainActivity.this, "에브리타임 어플을 설치해주세요", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -186,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             pi = pkgMgr.getPackageInfo("com.everytime.v2", PackageManager.GET_ACTIVITIES);
+            isExist = true;
         } catch(PackageManager.NameNotFoundException e) {
             isExist = false;
         }

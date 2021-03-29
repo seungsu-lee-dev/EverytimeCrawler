@@ -66,6 +66,7 @@ public class CrawlingService extends Service {
     private static String CHANNEL_ID = "channel1";
     private static String CHANEL_NAME = "Channel1";
     Intent intent3;
+    static int notiId = 0;
 
     @Nullable
     @Override
@@ -587,7 +588,8 @@ public class CrawlingService extends Service {
                         if(contain) {
                             System.out.println("장터게시판 키워드 알림: "+ i);
                             Log.d("게시판 url", texturl);
-                            push(texturl, titlestr);
+                            push(texturl, titlestr, notiId);
+                            notiId++;
                             contain = !contain;
                         }
 
@@ -626,7 +628,8 @@ public class CrawlingService extends Service {
                     if(contain) {
                         System.out.println("장터게시판 키워드 알림: "+ i);
                         Log.d("게시판 url", texturl);
-                        push(texturl, titlestr);
+                        push(texturl, titlestr, notiId);
+                        notiId++;
                         contain = !contain;
                     }
 
@@ -641,7 +644,7 @@ public class CrawlingService extends Service {
     }
 
     //---------------------------------------- 상단바 알림 -------------------------------------------------------
-    private void push(String host, String title){
+    private void push(String host, String title, int id){
         builder = null;
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -661,7 +664,7 @@ public class CrawlingService extends Service {
         Uri uri = Uri.parse(scheme);
 //        Intent intent3 = new Intent(Intent.ACTION_VIEW, uri);
         Intent intent3 = new Intent(Intent.ACTION_VIEW, uri);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 101, intent3,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, id, intent3,PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentTitle("알림");
 //        builder.setContentText("알림 메시지");
@@ -671,7 +674,7 @@ public class CrawlingService extends Service {
         builder.setContentIntent(pendingIntent);
 
         Notification notification = builder.build();
-        manager.notify(1,notification);
+        manager.notify(id,notification);
     }
 
     private static String substringBetween(String str, String open, String close) {
