@@ -11,6 +11,8 @@
 
 어플리케이션 이름 : 에타알리미
 
+https://github.com/seungsu-lee-dev/EverytimeCrawler/releases/tag/v1.0.0-beta
+
 
 
 https://github.com/seungsu-lee-dev/EverytimeCrawler
