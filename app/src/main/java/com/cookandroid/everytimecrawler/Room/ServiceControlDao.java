@@ -56,4 +56,7 @@ public interface ServiceControlDao {
 
     @Query("SELECT userAgent FROM controlTable WHERE title = 'check'")
     String showUserAgent();
+
+    @Query("SELECT listnum FROM controlTable WHERE title = 'check'")
+    String showListnum();
 }

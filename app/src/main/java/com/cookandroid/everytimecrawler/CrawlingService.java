@@ -116,7 +116,7 @@ public class CrawlingService extends Service {
                     }
                 });
             }
-        }, 0, 3000000); // 0초 지연을 준 후 50분마다 실행
+        }, 1000, 3000000); // 0초 지연을 준 후 50분마다 실행
 
     }
 
@@ -286,18 +286,24 @@ public class CrawlingService extends Service {
             int temp_id = sdb.ServiceControlDao().showId();
             String temp_title = sdb.ServiceControlDao().showTitle();
             String temp_des = sdb.ServiceControlDao().showDes();
+
+            ServiceControlEntity SC = new ServiceControlEntity(temp_title, temp_des);
+
             String temp_loginId = sdb.ServiceControlDao().showLoginId();
             String temp_loginPw = sdb.ServiceControlDao().showLoginPw();
             String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
             String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
             String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
+            String temp_listnum = sdb.ServiceControlDao().showListnum();
 
-            System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
+            Log.d("CrawlingThread listnum",temp_listnum);
+
+            System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent + ", listnum은 " + temp_listnum);
 
             Map<String, String> temp_loginCookie = new HashMap<String, String>();
             temp_loginCookie.put(temp_cookie_key, temp_cookie_value);
 
-            String strloginCookie = temp_cookie_key + "=" + temp_cookie_value;
+//            String strloginCookie = temp_cookie_key + "=" + temp_cookie_value;
 
             try {
 //                Document doc = Jsoup.connect("https://everytime.kr/389368")
@@ -467,12 +473,37 @@ public class CrawlingService extends Service {
                 String texturl = "";
 
                 for(int i=0; i<(listnum+1); i++) {
+//                    System.out.println(i + ":" + strArr[i]);
                     titlestr = substringBetween(strArr2[i], "title=\"", "\"");
                     Log.d("제목", titlestr);
 
                     textstr = substringBetween(strArr2[i], "text=\"", "\"");
 
                     href = substringBetween(strArr2[i], "id=\"", "\"");
+
+//                    Log.d("href", href);
+//                    Log.d("temp_listnum", temp_listnum);
+
+                    if(Long.parseLong(temp_listnum.trim())>=Long.parseLong(href.trim())) {
+                        return;
+//                        continue;
+                    }
+
+                    if(i==0) {
+                        SC.setId(temp_id);
+                        SC.setLoginId(temp_loginId);
+                        SC.setLoginPw(temp_loginPw);
+                        SC.setCookie_key(temp_cookie_key);
+                        SC.setCookie_value(temp_cookie_value);
+                        SC.setUserAgent(temp_userAgent);
+                        SC.setListnum(href);
+
+                        SC.setTitle(temp_title);
+                        SC.setDes(temp_des);
+
+                        sdb.ServiceControlDao().update(SC);
+                    }
+
 //                    texturl = "https://everytime.kr/389368/v/" + href;
                     texturl = "https://everytime.kr/389368/v/" + href;
 
@@ -634,7 +665,7 @@ public class CrawlingService extends Service {
 
         builder.setContentTitle("알림");
 //        builder.setContentText("알림 메시지");
-        builder.setContentText(title);
+        builder.setContentText("제목: " + title);
         builder.setSmallIcon(R.drawable.ic_launcher_background);
         builder.setAutoCancel(true);
         builder.setContentIntent(pendingIntent);
@@ -688,13 +719,17 @@ public class CrawlingService extends Service {
                 String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
                 String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
                 String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
+                String temp_listnum = sdb.ServiceControlDao().showListnum();
+
+                Log.d("CookieThread listnum",temp_listnum);
 
                 SC.setId(temp_id);
                 SC.setLoginId(temp_loginId);
                 SC.setLoginPw(temp_loginPw);
                 SC.setUserAgent(temp_userAgent);
+                SC.setListnum(temp_listnum);
 
-                System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
+                System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent + ", listnum은 " + temp_listnum);
 
                 // 전송할 폼 데이터
                 Map<String, String> data = new HashMap<>();

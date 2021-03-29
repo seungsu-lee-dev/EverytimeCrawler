@@ -1,6 +1,10 @@
 package com.cookandroid.everytimecrawler;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -95,38 +99,6 @@ public class MainActivity extends AppCompatActivity {
 //            intent2 = new Intent(getApplicationContext(), loading.class);
 //            startActivity(intent2);
 //        }
-        jump_thread = new JumpLoadingThread();
-        jump_thread.start();
-        try {
-            jump_thread.join();
-            if(loadingJump) {
-                Log.e("loadingJump", String.valueOf(loadingJump));
-                intent2 = new Intent(getApplicationContext(), SubActivity.class);
-                startActivity(intent2);
-                finish();
-            }
-            else {
-                auto_thread = new AutoLoginThread();
-                auto_thread.start();
-                try {
-                    auto_thread.join();
-                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-                    android.util.Log.i("스레드 join 오류", "Information message");
-                }
-            }
-
-            if (auto_state&&(!loadingJump)) {
-                auto_state = false;
-                intent = new Intent(getApplicationContext(), SubActivity.class);
-                startActivity(intent);
-                finish();
-            }
-
-        } catch (InterruptedException e) {
-//            e.printStackTrace();
-            Log.i("점프 스레드 오류", "Information message");
-        }
 
         login_id = (EditText) findViewById(R.id.login_id);
         login_password = (EditText) findViewById(R.id.login_password);
@@ -160,6 +132,65 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // 어플이 설치되어있지 않으면 마켓으로 이동
+        if(!getPackageListCheck()) {
+            try {
+                // 플레이스토어가 없으면 웹페이지로 이동
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "com.everytime.v2")));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.everytime.v2")));
+            }
+            return;
+        }
+
+        jump_thread = new JumpLoadingThread();
+        jump_thread.start();
+        try {
+            jump_thread.join();
+            if(loadingJump) {
+                Log.e("loadingJump", String.valueOf(loadingJump));
+                intent2 = new Intent(getApplicationContext(), SubActivity.class);
+                startActivity(intent2);
+                finish();
+            }
+            else {
+                auto_thread = new AutoLoginThread();
+                auto_thread.start();
+                try {
+                    auto_thread.join();
+                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+                    android.util.Log.i("스레드 join 오류", "Information message");
+                }
+            }
+
+            if (auto_state&&(!loadingJump)) {
+                auto_state = false;
+                intent = new Intent(getApplicationContext(), SubActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        } catch (InterruptedException e) {
+//            e.printStackTrace();
+            Log.i("점프 스레드 오류", "Information message");
+        }
+    }
+
+    private boolean getPackageListCheck() {
+        boolean isExist = false;
+
+        PackageManager pkgMgr = getPackageManager();
+        PackageInfo pi;
+
+        try {
+            pi = pkgMgr.getPackageInfo("com.everytime.v2", PackageManager.GET_ACTIVITIES);
+        } catch(PackageManager.NameNotFoundException e) {
+            isExist = false;
+        }
+        Log.d("isExist", Boolean.toString(isExist));
+        return isExist;
     }
 
     private void loginData(String loginId, String loginPw, String cookie_key, String cookie_value, String userAgent) {
@@ -178,8 +209,11 @@ public class MainActivity extends AppCompatActivity {
         SC.setCookie_value(cookie_value);
         SC.setUserAgent(userAgent);
 
+        String temp_listnum = sdb.ServiceControlDao().showListnum();
+        SC.setListnum(temp_listnum);
+
         sdb.ServiceControlDao().update(SC);
-        System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + loginId + ", loginPw는 " + loginPw + ", cookie_key는 " + cookie_key + ", cookie_value는 " + cookie_value + ", userAgent는 " + userAgent);
+        System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + loginId + ", loginPw는 " + loginPw + ", cookie_key는 " + cookie_key + ", cookie_value는 " + cookie_value + ", userAgent는 " + userAgent + ", listnum은 " + temp_listnum);
     }
 
     private boolean login(String loc_loginId, String loc_loginPw, String loc_userAgent) {
@@ -276,10 +310,11 @@ public class MainActivity extends AppCompatActivity {
             String temp_cookie_key = sdb.ServiceControlDao().showCookie_key();
             String temp_cookie_value = sdb.ServiceControlDao().showCookie_value();
             String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
+            String temp_listnum = sdb.ServiceControlDao().showListnum();
 
-            System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
+            System.out.println("title은 " + temp_title + ", des는 " + temp_des + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent + ", listnum은 " + temp_listnum);
 
-//                loginData(temp_loginId, temp_loginPw, temp_cookie_key, temp_cookie_value, temp_userAgent);
+//                loginData(temp_loginId, temp_loginPw, temp_cookie_key, temp_cookie_value, temp_userAgent, temp_listnum);
 
             boolean TF = login(temp_loginId, temp_loginPw, temp_userAgent);
 

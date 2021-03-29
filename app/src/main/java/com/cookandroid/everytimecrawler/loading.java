@@ -81,6 +81,9 @@ public class loading extends AppCompatActivity {
         String temp_userAgent = sdb.ServiceControlDao().showUserAgent();
         SC.setUserAgent(temp_userAgent);
 
+        String temp_listnum = sdb.ServiceControlDao().showListnum();
+        SC.setListnum(temp_listnum);
+
         sdb.ServiceControlDao().update(SC);
         System.out.println("c는 " + c + ", newc1은 " + state + ", loginId는 " + temp_loginId + ", loginPw는 " + temp_loginPw + ", cookie_key는 " + temp_cookie_key + ", cookie_value는 " + temp_cookie_value + ", userAgent는 " + temp_userAgent);
     }

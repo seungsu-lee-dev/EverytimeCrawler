@@ -20,6 +20,7 @@ public class ServiceControlEntity implements Parcelable {
     private String cookie_key;
     private String cookie_value;
     private String userAgent;
+    private String listnum;
 
 
     public ServiceControlEntity(String title, String des) {
@@ -30,6 +31,7 @@ public class ServiceControlEntity implements Parcelable {
         this.cookie_key = cookie_key;
         this.cookie_value = cookie_value;
         this.userAgent = userAgent;
+        this.listnum = listnum;
     }
 
     protected ServiceControlEntity(Parcel in) {
@@ -41,6 +43,7 @@ public class ServiceControlEntity implements Parcelable {
         cookie_key = in.readString();
         cookie_value = in.readString();
         userAgent = in.readString();
+        listnum = in.readString();
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -87,6 +90,10 @@ public class ServiceControlEntity implements Parcelable {
 
     public void setUserAgent(String userAgent) { this.userAgent = userAgent;}
 
+    public String getListnum() { return listnum;}
+
+    public void setListnum(String listnum) { this.listnum = listnum;}
+
     @Override
     public int describeContents() {
         return 0;
@@ -103,6 +110,7 @@ public class ServiceControlEntity implements Parcelable {
         dest.writeString(cookie_key);
         dest.writeString(cookie_value);
         dest.writeString(userAgent);
+        dest.writeString(listnum);
     }
 
     @Override
@@ -116,6 +124,7 @@ public class ServiceControlEntity implements Parcelable {
                 ", cookie_key='" + cookie_key + '\'' +
                 ", cookie_value='" + cookie_value + '\'' +
                 ", userAgent='" + userAgent + '\'' +
+                ", listnum='" + listnum + '\'' +
                 '}';
     }
 }
