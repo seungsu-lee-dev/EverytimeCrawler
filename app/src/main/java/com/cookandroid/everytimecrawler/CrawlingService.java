@@ -66,7 +66,7 @@ public class CrawlingService extends Service {
     private static String CHANNEL_ID = "channel1";
     private static String CHANEL_NAME = "Channel1";
     Intent intent3;
-    static int notiId = 0;
+    static int notiId = 1;
 
     @Nullable
     @Override
@@ -78,6 +78,8 @@ public class CrawlingService extends Service {
     public void onCreate() {
         android.util.Log.e("CrawlingService", "onCreate");
         super.onCreate();
+
+        fixedNoti();
 
 //        isLive = true;
         timer1 = new Timer(isLive);
@@ -270,6 +272,7 @@ public class CrawlingService extends Service {
         isRun1 = false; isRun2 = false; isRun3 = false;
 //        Done = true;
         timer1.cancel(); timer2.cancel();
+        manager.cancelAll();
         super.onDestroy();
     }
 
@@ -485,7 +488,7 @@ public class CrawlingService extends Service {
 //                    Log.d("href", href);
 //                    Log.d("temp_listnum", temp_listnum);
 
-                    if(Long.parseLong(temp_listnum.trim())>=Long.parseLong(href.trim())) {
+                    if((i==0)&&(Long.parseLong(temp_listnum.trim())>=Long.parseLong(href.trim()))) {
                         return;
 //                        continue;
                     }
@@ -643,6 +646,30 @@ public class CrawlingService extends Service {
         }
     }
 
+    private void fixedNoti(){
+        builder = null;
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            manager.createNotificationChannel( new NotificationChannel(CHANNEL_ID, CHANEL_NAME, NotificationManager.IMPORTANCE_DEFAULT) );
+            builder = new NotificationCompat.Builder(this,CHANNEL_ID);
+        }
+        else{
+            builder = new NotificationCompat.Builder(this);
+        }
+
+        builder.setContentTitle("ON");
+//        builder.setContentText("알림 메시지");
+        builder.setContentText("에타알리미가 켜져있습니다");
+        builder.setSmallIcon(R.drawable.ic_launcher_background);
+        builder.setAutoCancel(true);
+//        builder.setContentIntent(pendingIntent);
+
+        Notification notification = builder.build();
+        notification.flags = Notification.FLAG_ONGOING_EVENT;
+        manager.notify(0,notification);
+    }
+
     //---------------------------------------- 상단바 알림 -------------------------------------------------------
     private void push(String host, String title, int id){
         builder = null;
@@ -660,13 +687,12 @@ public class CrawlingService extends Service {
 //        intent3.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
 //        String scheme = "everytime.v2://" + host;
-        String scheme = host;
-        Uri uri = Uri.parse(scheme);
+        Uri uri = Uri.parse(host);
 //        Intent intent3 = new Intent(Intent.ACTION_VIEW, uri);
         Intent intent3 = new Intent(Intent.ACTION_VIEW, uri);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, id, intent3,PendingIntent.FLAG_UPDATE_CURRENT);
 
-        builder.setContentTitle("알림");
+        builder.setContentTitle("키워드 알림");
 //        builder.setContentText("알림 메시지");
         builder.setContentText("제목: " + title);
         builder.setSmallIcon(R.drawable.ic_launcher_background);
