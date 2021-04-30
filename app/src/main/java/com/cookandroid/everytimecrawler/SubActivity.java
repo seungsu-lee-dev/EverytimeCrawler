@@ -225,8 +225,8 @@ public class SubActivity extends AppCompatActivity {
         SC.setCookie_value("1");
         SC.setUserAgent("1");
 
-        String temp_listnum = sdb.ServiceControlDao().showListnum();
-        SC.setListnum(temp_listnum);
+//        String temp_listnum = sdb.ServiceControlDao().showListnum();
+        SC.setListnum("1");
 
         sdb.ServiceControlDao().update(SC);
     }
