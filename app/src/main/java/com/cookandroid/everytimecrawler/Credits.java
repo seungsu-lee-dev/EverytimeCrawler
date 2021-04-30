@@ -46,7 +46,7 @@ public class Credits extends AppCompatActivity {
                 + " 이동희\n\n"
                 + " 이동희\n\n"
                 + " 박경인");
-        soon.setText("\n\nComing soon \n Pandemic");
+        soon.setText("\n\nComing soon \n Mugunghwa Flowers Have Bloomed");
 
         page1.startAnimation(animation);
         setAnimation(animation);
