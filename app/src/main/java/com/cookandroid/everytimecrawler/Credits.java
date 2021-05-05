@@ -10,8 +10,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Credits extends AppCompatActivity {
-    private TextView textView,textView2;
-    private TextView title,soon;
+    private TextView textView, textView2;
+    private TextView title, soon, image_copyright;
     Intent intent;
     private Animation animation;
 
@@ -30,6 +30,7 @@ public class Credits extends AppCompatActivity {
         textView2 = (TextView) findViewById(R.id.credit3);
         soon = (TextView) findViewById(R.id.soon);
         page1 = findViewById(R.id.credit4);
+        image_copyright = findViewById(R.id.image_copyright);
 
         title.setText("CREDITS \n");
 
@@ -46,6 +47,7 @@ public class Credits extends AppCompatActivity {
                 + " 이동희\n\n"
                 + " 이동희\n\n"
                 + " 박경인");
+        image_copyright.setText("\n\nrun, logout, trashcan Icons by Icons8.com");
         soon.setText("\n\nComing soon \n Mugunghwa Flowers Have Bloomed");
 
         page1.startAnimation(animation);
