@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,6 +50,7 @@ public class SubActivity extends AppCompatActivity {
     Intent intent2;
     Intent intent3;
     Intent intent4;
+    Intent intent5;
     Button btnImg;
     private String detail;
     private List<ServiceControlEntity> checks;
@@ -131,15 +133,18 @@ public class SubActivity extends AppCompatActivity {
                 com.lakue.lakuepopupactivity.PopupResult result = (com.lakue.lakuepopupactivity.PopupResult) data.getSerializableExtra("result");
                 if (result == com.lakue.lakuepopupactivity.PopupResult.LEFT) {
                     // 작성 코드
-                    Toast.makeText(this, "LEFT", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "LEFT", Toast.LENGTH_SHORT).show();
 
                 } else if (result == com.lakue.lakuepopupactivity.PopupResult.RIGHT) {
                     // 작성 코드
-                    Toast.makeText(this, "RIGHT", Toast.LENGTH_SHORT).show();
+                    String url = "https://github.com/seungsu-lee-dev/EverytimeCrawler";
+                    intent5 = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    startActivity(intent5);
+                    //Toast.makeText(this, "RIGHT", Toast.LENGTH_SHORT).show();
 
                 } else if (result == com.lakue.lakuepopupactivity.PopupResult.IMAGE) {
                     // 작성 코드
-                    Toast.makeText(this, "IMAGE", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "IMAGE", Toast.LENGTH_SHORT).show();
 
                 }
             }
