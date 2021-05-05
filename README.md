@@ -13,7 +13,7 @@
 
 어플리케이션 이름 : 에타알리미
 
-https://github.com/seungsu-lee-dev/EverytimeCrawler/releases/tag/v1.0.0-beta
+https://github.com/seungsu-lee-dev/EverytimeCrawler/releases/download/v.1.1.3-release/etaAlimy_release-1.1.3_20210505.apk
 
 
 
@@ -27,28 +27,29 @@ https://github.com/seungsu-lee-dev/EverytimeCrawler
 
 각 학교마다 url이 다르기 때문에 현재는 안동대학교 에브리타임만 작동한다.
 
-![슬라이드1](https://user-images.githubusercontent.com/68325847/116733552-31bf5000-aa27-11eb-8c4b-f0cd64fcf0ce.PNG)
+![슬라이드1](https://user-images.githubusercontent.com/68325847/117156938-21c5b880-adf9-11eb-951f-0f7ee9727185.PNG)
 
-![슬라이드2](https://user-images.githubusercontent.com/68325847/116733577-3ab02180-aa27-11eb-8b52-1fa2cf65c5e9.PNG)
+![슬라이드2](https://user-images.githubusercontent.com/68325847/117156946-22f6e580-adf9-11eb-8124-e227b88d5c6a.PNG)
 
-![슬라이드3](https://user-images.githubusercontent.com/68325847/116733589-3dab1200-aa27-11eb-8aea-1687d397e88b.PNG)
+![슬라이드3](https://user-images.githubusercontent.com/68325847/117156955-24c0a900-adf9-11eb-8f16-73ae7389fdb3.PNG)
 
-![슬라이드4](https://user-images.githubusercontent.com/68325847/116733600-400d6c00-aa27-11eb-8f9c-a7dbb3433ee9.PNG)
+![슬라이드4](https://user-images.githubusercontent.com/68325847/117156960-25f1d600-adf9-11eb-9116-e1facfb1df75.PNG)
 
-![슬라이드5](https://user-images.githubusercontent.com/68325847/116733607-43085c80-aa27-11eb-987a-d68b5ca4fc81.PNG)
+![슬라이드5](https://user-images.githubusercontent.com/68325847/117156973-28543000-adf9-11eb-864d-95c2ef337e7c.PNG)
 
-![슬라이드6](https://user-images.githubusercontent.com/68325847/116733621-46034d00-aa27-11eb-8267-e2f74beeed1a.PNG)
+![슬라이드6](https://user-images.githubusercontent.com/68325847/117156980-2a1df380-adf9-11eb-8b7f-16498291ca08.PNG)
 
-![슬라이드7](https://user-images.githubusercontent.com/68325847/116733628-48fe3d80-aa27-11eb-8d79-4ff31e80d44e.PNG)
+![슬라이드7](https://user-images.githubusercontent.com/68325847/117156995-2be7b700-adf9-11eb-9a89-c9bebbac5d3a.PNG)
 
-![슬라이드8](https://user-images.githubusercontent.com/68325847/116733637-4d2a5b00-aa27-11eb-944e-f772e420dcaf.PNG)
+![슬라이드8](https://user-images.githubusercontent.com/68325847/117157716-c9db8180-adf9-11eb-97bf-1dd70d5ee17b.png)
 
-![슬라이드9](https://user-images.githubusercontent.com/68325847/116733650-50bde200-aa27-11eb-9910-3b2b25e76b8c.PNG)
+![슬라이드9](https://user-images.githubusercontent.com/68325847/117157025-31450180-adf9-11eb-8963-c9b1f476a0b2.PNG)
 
-![슬라이드10](https://user-images.githubusercontent.com/68325847/116733663-54516900-aa27-11eb-8cb8-9a13b12a0ab0.PNG)
+![슬라이드10](https://user-images.githubusercontent.com/68325847/117157036-32762e80-adf9-11eb-8f44-1a241af12680.PNG)
 
-![슬라이드11](https://user-images.githubusercontent.com/68325847/116733671-57e4f000-aa27-11eb-8af3-5d0ffe1a727c.PNG)
+![슬라이드11](https://user-images.githubusercontent.com/68325847/117157045-343ff200-adf9-11eb-8d86-1b241b061bb5.PNG)
 
-![슬라이드12](https://user-images.githubusercontent.com/68325847/116733683-5adfe080-aa27-11eb-9e23-f8d2ddc50ef3.PNG)
+![슬라이드12](https://user-images.githubusercontent.com/68325847/117157053-36a24c00-adf9-11eb-8128-9889c82abca8.PNG)
 
-![슬라이드13](https://user-images.githubusercontent.com/68325847/116733694-5ddad100-aa27-11eb-887c-3c68ee2eb184.PNG)
+![슬라이드13](https://user-images.githubusercontent.com/68325847/117157061-386c0f80-adf9-11eb-9ca6-c04d6fce3402.PNG)
+
