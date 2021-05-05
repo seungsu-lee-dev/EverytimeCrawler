@@ -381,6 +381,7 @@ public class SubActivity extends AppCompatActivity {
                     intent2 = new Intent(getApplicationContext(), loading.class);
                     startActivity(intent2);
 //                    push();
+                    Toast.makeText(SubActivity.this, "키워드 알람 기능이 시작됩니다.", Toast.LENGTH_SHORT).show();
                     finish();
                     break;
 
