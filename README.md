@@ -13,13 +13,11 @@
 
 어플리케이션 이름 : 에타알리미
 
+담당 업무 : 주제 기획, 설계, 전반적인 기능 구현, 팀장으로서 역할 분배, 팀원 간의 협업을 위해 깃허브 깃 팀즈 사용을 도움, 전반적인 테스트, 버그 수정
+
 https://github.com/seungsu-lee-dev/EverytimeCrawler/releases/download/v.1.1.3-release/etaAlimy_release-1.1.3_20210505.apk
 
-
-
 https://github.com/seungsu-lee-dev/EverytimeCrawler
-
-
 
 에브리타임 장터게시판에 원하는 물건이 올라올 때 바로 사지 못했을 때의 아쉬움이 있었다.
 
