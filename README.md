@@ -3,7 +3,7 @@
 
 사용 언어 : Java
 
-사용 프로그램 : Android Studio
+사용 IDE : Android Studio
 
 개발기간 : 2021년 1월 7일 ~ 2021년 3월 29일
 
